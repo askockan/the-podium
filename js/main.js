@@ -8,7 +8,7 @@ let camera, scene, renderer;
 let loader;
 let controller, controls;
 let groundGeometry, groundTexture, groundMaterial, groundMesh
-let display_model, ar_model;
+let display_model;
 
 let reticle;
 
@@ -21,6 +21,7 @@ animate();
 
 document.getElementById("ARButton").addEventListener('click', () => {
     display_model.visible = false;
+    console.log("test");
 })
 
 function init() {
@@ -123,13 +124,11 @@ function init() {
             if (ar_scene_model) {
                 scene.remove(ar_scene_model);
             }
+            reticle.matrix.decompose( display_model.position, display_model.quaternion, display_model.scale );
+            display_model.scale.y = Math.random() * 2 + 1;
+            scene.add( display_model );
 
-            ar_model = display_model.clone();
-            reticle.matrix.decompose( ar_model.position, ar_model.quaternion, ar_model.scale );
-            ar_model.scale.y = Math.random() * 2 + 1;
-            scene.add( ar_model );
-
-            ar_scene_model = ar_model;
+            ar_scene_model = display_model;
             
             display_model.position.setFromMatrixPosition(reticle.matrix);
             display_model.visible = true;
