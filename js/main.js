@@ -1,93 +1,203 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { ARButton } from 'three/addons/webxr/ARButton.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-const renderer = new THREE.WebGLRenderer({ antialias: true }, {alpha: true});
-renderer.outputColorSpace = THREE.SRGBColorSpace;
+let container;
+let camera, scene, renderer;
+let loader;
+let controller, controls;
+let groundGeometry, groundTexture, groundMaterial, groundMesh
+let display_model, ar_model;
 
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x000000, 0);
-renderer.setPixelRatio(window.devicePixelRatio);
+let reticle;
 
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+let hitTestSource = null;
+let hitTestSourceRequested = false;
+let ar_scene_model = null;
 
-document.body.appendChild(renderer.domElement);
+init();
+animate();
 
-const scene = new THREE.Scene();
+document.getElementById("ARButton").addEventListener('click', () => {
+    display_model.visible = false;
+})
 
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-camera.position.set(0, 5, 11);
+function init() {
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.enablePan = false;
-controls.minDistance = 2;
-controls.maxDistance = 20;
-controls.minPolarAngle = 0.5;
-controls.maxPolarAngle = 1.6;
-controls.autoRotate = false;
-controls.target = new THREE.Vector3(0, 1, 0);
-controls.update();
+    container = document.createElement( 'div' );
+    document.getElementById('model').appendChild( container );
 
-const groundGeometry = new THREE.PlaneGeometry(10, 10);
-groundGeometry.rotateX(-Math.PI / 2);
-const groundTexture = new THREE.TextureLoader().load('models/default/textures/asphalt.jpg');
-groundTexture.wrapS = THREE.RepeatWrapping;
-groundTexture.repeat.set(1, 1);
-groundTexture.anisotropy = 2;
-const groundMaterial = new THREE.MeshStandardMaterial( { 
-  map: groundTexture,
-  side: THREE.DoubleSide 
-} );
-const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
-groundMesh.castShadow = false;
-groundMesh.receiveShadow = true;
-scene.add(groundMesh);
+    //
 
-const spotLight = new THREE.SpotLight(0xffffff, 2000, 100, 0.22, 1);
-spotLight.position.set(0, 15, 0);
-spotLight.castShadow = true;
-spotLight.shadow.bias = -0.0001;
-scene.add(spotLight);
+    scene = new THREE.Scene();
 
-const ambientLight = new THREE.AmbientLight(0x404040, 15);
-ambientLight.position.set(1, 0, 0);
-spotLight.castShadow = false;
-scene.add(ambientLight);
+    //
 
-const loader = new GLTFLoader().setPath('models/default/');
-loader.load('scene.gltf', (gltf) => {
-  console.log('loading model');
-  const mesh = gltf.scene;
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.set(0, 5, 11);
 
-  mesh.traverse((child) => {
-    if (child.isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = true;
+    //
+
+    const spotLight = new THREE.SpotLight(0xffffff, 2000, 100, 0.22, 1);
+    spotLight.position.set(0, 15, 0);
+    spotLight.castShadow = true;
+    spotLight.shadow.bias = -0.0001;
+    scene.add(spotLight);
+
+    const ambientLight = new THREE.AmbientLight(0x404040, 15);
+    ambientLight.position.set(1, 0, 0);
+    spotLight.castShadow = false;
+    scene.add(ambientLight);
+
+    //
+
+    renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setAnimationLoop( animate );
+    renderer.xr.enabled = true;
+    container.appendChild( renderer.domElement );
+
+    //
+
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.1;
+    controls.enablePan = false;
+    controls.minDistance = 2;
+    controls.maxDistance = 20;
+    controls.minPolarAngle = 0.5;
+    controls.maxPolarAngle = 1.6;
+    controls.autoRotate = false;
+    controls.target = new THREE.Vector3(0, 1, 0);
+    controls.update();
+    
+    //
+
+    document.getElementById('model').appendChild( ARButton.createButton( renderer, { requiredFeatures: [ 'hit-test' ] } ) );
+
+    //
+
+    groundGeometry = new THREE.PlaneGeometry(10, 10);
+    groundGeometry.rotateX(-Math.PI / 2);
+    groundTexture = new THREE.TextureLoader().load('models/default/textures/asphalt.jpg');
+    groundTexture.wrapS = THREE.RepeatWrapping;
+    groundTexture.repeat.set(1, 1);
+    groundTexture.anisotropy = 2;
+    groundMaterial = new THREE.MeshStandardMaterial( { 
+    map: groundTexture,
+    side: THREE.DoubleSide 
+    } );
+    groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+    groundMesh.castShadow = false;
+    groundMesh.receiveShadow = true;
+    scene.add(groundMesh);
+
+    //
+
+    loader = new GLTFLoader().setPath('models/default/');
+    loader.load('scene.gltf', (gltf) => {
+        console.log('loading model');
+        display_model = gltf.scene;
+
+        display_model.traverse((child) => {
+            if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            }
+        });
+
+        display_model.position.set(0, 0, 0);
+        scene.add(display_model);
+
+        document.getElementById('progress-container').style.display = 'none';
+    }, (xhr) => {
+        console.log(`loading ${xhr.loaded / xhr.total * 100}%`);
+    }, (error) => {
+        console.error(error);
+    });
+
+    function onSelect() {
+        if ( reticle.visible && display_model ) {
+            if (ar_scene_model) {
+                scene.remove(ar_scene_model);
+            }
+
+            ar_model = display_model.clone();
+            reticle.matrix.decompose( ar_model.position, ar_model.quaternion, ar_model.scale );
+            ar_model.scale.y = Math.random() * 2 + 1;
+            scene.add( ar_model );
+
+            ar_scene_model = ar_model;
+            
+            display_model.position.setFromMatrixPosition(reticle.matrix);
+            display_model.visible = true;
+
+        }
+
     }
-  });
 
-  mesh.position.set(0, 0, 0);
-  scene.add(mesh);
+    controller = renderer.xr.getController( 0 );
+    controller.addEventListener( 'select', onSelect );
+    scene.add( controller );
 
-  document.getElementById('progress-container').style.display = 'none';
-}, (xhr) => {
-  console.log(`loading ${xhr.loaded / xhr.total * 100}%`);
-}, (error) => {
-  console.error(error);
-});
+    reticle = new THREE.Mesh(
+        new THREE.RingGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
+        new THREE.MeshBasicMaterial()
+    );
+    reticle.matrixAutoUpdate = false;
+    reticle.visible = false;
+    scene.add( reticle );
 
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
+    //
 
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
+    window.addEventListener( 'resize', onWindowResize );
+
 }
 
-animate();
+function onWindowResize() {
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
+
+//
+
+function animate( timestamp, frame ) {
+    if ( frame ) {
+        const referenceSpace = renderer.xr.getReferenceSpace();
+        const session = renderer.xr.getSession();
+
+        if ( hitTestSourceRequested === false ) {
+
+            session.requestReferenceSpace( 'viewer' ).then( function ( referenceSpace ) {
+
+                session.requestHitTestSource( { space: referenceSpace } ).then( function ( source ) {
+                    hitTestSource = source;
+                } );
+            } );
+            session.addEventListener( 'end', function () {
+                hitTestSourceRequested = false;
+                hitTestSource = null;
+
+                reticle.visible = false;
+            } );
+            hitTestSourceRequested = true;
+        }
+        if ( hitTestSource ) {
+            const hitTestResults = frame.getHitTestResults( hitTestSource );
+            if ( hitTestResults.length ) {
+                const hit = hitTestResults[ 0 ];
+                reticle.visible = true;
+                reticle.matrix.fromArray( hit.getPose( referenceSpace ).transform.matrix );
+            } else {
+                reticle.visible = false;
+            }
+        }
+    }
+    renderer.render( scene, camera );
+}
