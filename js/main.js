@@ -23,34 +23,14 @@ animate();
 
 document.getElementById("ARButton").addEventListener('click', () => {
     display_model.visible = false;
-    document.getElementById('ar-buttons').style.display = 'flex';
-    console.log("display");
 })
 
-document.getElementById("scaleup").addEventListener('click', () => {
-    scaleup();
-})
-
-document.getElementById("scaledown").addEventListener('click', () => {
-    scaledown();
-})
-
-function scaleup() {
-    if (x == 2.5) {
-        return console.log("MAX");
+document.getElementById("model-slider").addEventListener('input', (e) => {
+    const scale = e.target.value;
+    if (display_model) {
+        display_model.scale.set(scale, scale, scale);
     }
-    x += 0.5
-    display_model.scale.set(x, x, x);
-    
-}
-
-function scaledown() {
-    if (x == 0.5) {
-        return console.log("MIN")
-    }
-    x -= 0.5
-    display_model.scale.set(x, x, x);
-}
+});
 
 function init() {
 
@@ -221,7 +201,6 @@ function animate( timestamp, frame ) {
                 hitTestSource = null;
 
                 reticle.visible = false;
-                document.getElementById('ar-buttons').style.display = 'none'; //
                 display_model.scale.set(base_scale);
             } );
             hitTestSourceRequested = true;
@@ -231,13 +210,9 @@ function animate( timestamp, frame ) {
             if ( hitTestResults.length ) {
                 const hit = hitTestResults[ 0 ];
                 reticle.visible = true;
-
-                document.getElementById('ar-buttons').style.display = 'absolute'; //
-
                 reticle.matrix.fromArray( hit.getPose( referenceSpace ).transform.matrix );
             } else {
                 reticle.visible = false;
-                document.getElementById('ar-buttons').style.display = 'none'; //
             }
         }
     }
