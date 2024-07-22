@@ -3,6 +3,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ARButton } from 'three/addons/webxr/ARButton.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
+const modelSlider = document.getElementById('model-slider');
+
 let container;
 let camera, scene, renderer;
 let loader;
@@ -16,8 +18,6 @@ let hitTestSource = null;
 let hitTestSourceRequested = false;
 let ar_scene_model = null;
 
-let x = 1.5
-
 init();
 animate();
 
@@ -26,15 +26,17 @@ document.getElementById("ARButton").addEventListener('click', () => {
     display_model.scale.set(base_scale);
 })
 
-document.getElementById("model-slider").addEventListener('input', (e) => {
-    const scale = e.target.value;
-    if (display_model) {
-        display_model.scale.set(scale, scale, scale);
-    }
-});
-
 function init() {
 
+    modelSlider.addEventListener('input', (e) => {
+        const scale = e.target.value;
+        let parsedScale = Math.round(parseInt(scale));
+        if (display_model) {
+            display_model.scale.set(scale, scale, scale);
+            ambientLight.intensity = parsedScale*15
+        }
+    });
+    
     container = document.createElement( 'div' );
     document.getElementById('model').appendChild( container );
 
