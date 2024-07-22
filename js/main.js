@@ -23,6 +23,7 @@ animate();
 
 document.getElementById("ARButton").addEventListener('click', () => {
     display_model.visible = false;
+    display_model.scale.set(base_scale);
 })
 
 document.getElementById("model-slider").addEventListener('input', (e) => {

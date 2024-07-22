@@ -45,6 +45,7 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
 }
 
 #web-ui {
@@ -117,44 +118,45 @@ left: 5%;
 @media only screen and (max-width: 600px) {
 #progress {
   font-size: 2em
-}
+ }
+
 #web-ui {
-    display: block;
+  display: block;
+  width: 100px;
+  top: 15%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+ }
+
+#model-slider {
     width: 100px;
-    top: 15%;
-    left: 20%;
-    transform: translate(-50%, -50%);
-  }
+ }
 
-  #model-slider {
-      width: 100px;
-  }
+#model-slider::-webkit-slider-thumb {
+    width: 15px;
+    height: 15px;
+ }
 
-  #model-slider::-webkit-slider-thumb {
-      width: 15px;
-      height: 15px;
-  }
+#model-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+ }
 
-  #model-slider::-moz-range-thumb {
-      width: 15px;
-      height: 15px;
-  }
-
-  .zoomslider {
+.zoomslider {
     width: 150px;
+ }
+
+.zoomslider #zoom {
+    left: 50%;
   }
 
-  .zoomslider #zoom {
-      left: 50%;
+.zoomslider #in {
+    font-size: 1rem;
+    top: 38%;
+    margin-left: 42px;
   }
 
-  .zoomslider #in {
-      font-size: 1rem;
-      top: 38%;
-      margin-left: 42px;
-  }
-
-  .zoomslider #out {
+.zoomslider #out {
     font-size: 1rem;
     top: 38%;
     margin-left: 5px; 
