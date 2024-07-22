@@ -121,7 +121,7 @@ left: 5%;
  }
 
 #web-ui {
-  display: block;
+  display: flex;
   width: 100px;
   top: 15%;
   left: 20%;
