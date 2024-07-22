@@ -16,13 +16,41 @@ let hitTestSource = null;
 let hitTestSourceRequested = false;
 let ar_scene_model = null;
 
+let x = 1.5
+
 init();
 animate();
 
 document.getElementById("ARButton").addEventListener('click', () => {
     display_model.visible = false;
-    console.log("test");
+    document.getElementById('ar-buttons').style.display = 'flex';
+    console.log("display");
 })
+
+document.getElementById("scaleup").addEventListener('click', () => {
+    scaleup();
+})
+
+document.getElementById("scaledown").addEventListener('click', () => {
+    scaledown();
+})
+
+function scaleup() {
+    if (x == 2.5) {
+        return console.log("MAX");
+    }
+    x += 0.5
+    display_model.scale.set(x, x, x);
+    
+}
+
+function scaledown() {
+    if (x == 0.5) {
+        return console.log("MIN")
+    }
+    x -= 0.5
+    display_model.scale.set(x, x, x);
+}
 
 function init() {
 
@@ -76,8 +104,14 @@ function init() {
     
     //
 
-    document.getElementById('model').appendChild( ARButton.createButton( renderer, { requiredFeatures: [ 'hit-test' ] } ) );
+    let options = {
+        requiredFeatures: ['hit-test'],
+        optionalFeatures: ['dom-overlay']
+    }
 
+    options.domOverlay = {root: document.getElementById("content")};
+    document.body.appendChild( ARButton.createButton(renderer, options));
+    
     //
 
     groundGeometry = new THREE.PlaneGeometry(10, 10);
@@ -110,9 +144,12 @@ function init() {
         });
 
         display_model.position.set(0, 0, 0);
+        display_model.scale.set(1.5, 1.5, 1.5);
+        const base_scale = display_model.scale;
+        console.log(base_scale);
         scene.add(display_model);
 
-        document.getElementById('progress-container').style.display = 'none';
+        document.getElementById('progress').style.display = 'none';
     }, (xhr) => {
         console.log(`loading ${xhr.loaded / xhr.total * 100}%`);
     }, (error) => {
@@ -184,6 +221,8 @@ function animate( timestamp, frame ) {
                 hitTestSource = null;
 
                 reticle.visible = false;
+                document.getElementById('ar-buttons').style.display = 'none'; //
+                display_model.scale.set(base_scale);
             } );
             hitTestSourceRequested = true;
         }
@@ -192,9 +231,13 @@ function animate( timestamp, frame ) {
             if ( hitTestResults.length ) {
                 const hit = hitTestResults[ 0 ];
                 reticle.visible = true;
+
+                document.getElementById('ar-buttons').style.display = 'absolute'; //
+
                 reticle.matrix.fromArray( hit.getPose( referenceSpace ).transform.matrix );
             } else {
                 reticle.visible = false;
+                document.getElementById('ar-buttons').style.display = 'none'; //
             }
         }
     }

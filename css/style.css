@@ -35,8 +35,10 @@ h1 {
     padding: 16px;
 
 }
-
-#progress-container {
+  
+#progress {
+    font-size: 3em;
+    color: white;
     position: fixed;
     width: 100%;
     height: 100%;
@@ -44,14 +46,26 @@ h1 {
     justify-content: center;
     align-items: center;
   }
-  
-#progress {
-    font-size: 2.5em;
-    color: white;
-  }
 
 @media only screen and (max-width: 600px) {
   #progress {
     font-size: 2em
   }
+}
+
+#ar-buttons {
+  position: absolute;
+  top: 93%;
+  left: calc(50% - 100px);
+  display: flex;
+  gap: 140px;
+}
+
+#ar-buttons button {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
 }
