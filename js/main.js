@@ -4,6 +4,7 @@ import { ARButton } from 'three/addons/webxr/ARButton.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const modelSlider = document.getElementById('model-slider');
+const modelKg = document.getElementById('modelkg');
 
 let container;
 let camera, scene, renderer;
@@ -30,13 +31,16 @@ function init() {
 
     modelSlider.addEventListener('input', (e) => {
         const scale = e.target.value;
-        let parsedScale = Math.round(parseInt(scale));
         if (display_model) {
             display_model.scale.set(scale, scale, scale);
-            ambientLight.intensity = parsedScale*15
+            ambientLight.intensity = scale*11;
+            let currentKg = 533*scale
+            modelKg.innerHTML = Math.round(currentKg) + " " + "KG";;
         }
     });
     
+    //
+
     container = document.createElement( 'div' );
     document.getElementById('model').appendChild( container );
 
