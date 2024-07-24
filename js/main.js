@@ -35,7 +35,7 @@ function init() {
             display_model.scale.set(scale, scale, scale);
             ambientLight.intensity = scale*11;
             let currentKg = 533*scale
-            modelKg.innerHTML = Math.round(currentKg) + " " + "KG";;
+            modelKg.innerHTML = Math.round(currentKg) + " " + "KG";
         }
     });
     

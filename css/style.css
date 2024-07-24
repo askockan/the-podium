@@ -27,14 +27,15 @@ h1 {
   font-weight: bold;
 }
 
-#info {
+#carinfo {
   position: fixed;
   color: #c31432;
   font-weight: bold;
-  font-size: 1.3rem;
-  margin-top: 50px;
-  padding: 16px;
-
+  font-size: 1.5rem;
+  bottom: 60%;
+  border: 5px outset #c31432;
+  right: 2%;
+  padding: 4px;
 }
 
 #progress {
@@ -63,7 +64,7 @@ h1 {
 #web-ui #modelsize{
   position: absolute;
   font-size: 1.5rem;
-  color: whitesmoke;
+  color: inherit;
   text-transform: uppercase;
   left: 20%;
 }
@@ -111,14 +112,14 @@ cursor: pointer;
 
 .size-slider #in {
 position: absolute;
-color: whitesmoke;
+color: inherit;
 font-size: 1.5rem;
 left: 90%;
 }
 
 .size-slider #out {
 position: absolute;
-color: whitesmoke;
+color: inherit;
 font-size: 1.5rem;
 left: 5%;
 }
@@ -147,10 +148,23 @@ left: 5%;
     width: 150px;
     top: 15%;
     left: 5%;
+    color: whitesmoke;
   }
 
   #web-ui #modelsize {
     font-size: 1.2rem;
+  }
+
+  #carinfo {
+    bottom: 88%;
+    left: 21.5%;
+    top: 7.5%;
+    color: #c31432;
+    font-size: 1.1em;
+    border: 5px outset #c31432;
+    height: 35px;
+    width: 230px;
+    padding: 4px 2px 4px 7px;
   }
 
   #model-slider {
@@ -190,6 +204,8 @@ left: 5%;
   
   .kginfo #modelkg {
     font-size: 1.7rem;
+    width: 100px;
+
   } 
 }
 
