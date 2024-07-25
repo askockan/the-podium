@@ -5,6 +5,15 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const modelSlider = document.getElementById('model-slider');
 const modelKg = document.getElementById('modelkg');
+const navbutton = document.getElementById('navbutton');
+const navcss = window.getComputedStyle(navbutton, null);
+const sidenav = document.getElementById('sidenav');
+const carinfo = document.getElementById('carinfo');
+
+
+const sf23 = document.getElementById('sf23');
+const rb19 = document.getElementById('rb19');
+
 
 let container;
 let camera, scene, renderer;
@@ -29,6 +38,25 @@ document.getElementById("ARButton").addEventListener('click', () => {
 
 function init() {
 
+
+    navbutton.addEventListener('click', () => {
+        let navRotation = navcss.getPropertyValue("rotate");
+        let navTransform = navcss.getPropertyValue("transform");
+
+        if (navTransform == 'matrix(1, 0, 0, 1, 0, 0)') {
+            navbutton.style.marginLeft = '215px';
+            sidenav.style.marginLeft = '0';
+            navbutton.style.transform = 'scaleY(-1)';
+        } else {
+            sidenav.style.marginLeft = '-215px';
+            navbutton.style.marginLeft = '7px';
+            navbutton.style.rotate = '90deg';
+            navbutton.style.transform = 'scaleY(1)';
+        }
+    })
+    
+    //
+    
     modelSlider.addEventListener('input', (e) => {
         const scale = e.target.value;
         if (display_model) {
@@ -103,7 +131,7 @@ function init() {
 
     groundGeometry = new THREE.PlaneGeometry(10, 10);
     groundGeometry.rotateX(-Math.PI / 2);
-    groundTexture = new THREE.TextureLoader().load('models/default/textures/asphalt.jpg');
+    groundTexture = new THREE.TextureLoader().load('models/ground/asphalt.jpg');
     groundTexture.wrapS = THREE.RepeatWrapping;
     groundTexture.repeat.set(1, 1);
     groundTexture.anisotropy = 2;
@@ -118,7 +146,71 @@ function init() {
 
     //
 
-    loader = new GLTFLoader().setPath('models/default/');
+    rb19.addEventListener("click", () => {
+        scene.remove(display_model);
+        document.getElementById('progress').style.display = 'flex';
+        console.log("rb19 click");
+        loader = new GLTFLoader().setPath('models/rb19/');
+        loader.load('scene.gltf', (gltf) => {
+        console.log('loading model');
+        display_model = gltf.scene;
+
+        display_model.traverse((child) => {
+            if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            }
+        });
+
+        display_model.position.set(0, 0, 0);
+        display_model.scale.set(1.5, 1.5, 1.5);
+        const base_scale = display_model.scale;
+        console.log(base_scale);
+        scene.add(display_model);
+
+        carinfo.innerHTML = "Oracle Red Bull F1 RB19"
+        document.getElementById('progress').style.display = 'none';
+    }, (xhr) => {
+        console.log(`loading ${xhr.loaded / xhr.total * 100}%`);
+    }, (error) => {
+        console.error(error);
+    });
+    })
+
+    sf23.addEventListener("click", () => {
+        scene.remove(display_model);
+        document.getElementById('progress').style.display = 'flex';
+        console.log("rb19 click");
+        loader = new GLTFLoader().setPath('models/sf23/');
+        loader.load('scene.gltf', (gltf) => {
+        console.log('loading model');
+        display_model = gltf.scene;
+
+        display_model.traverse((child) => {
+            if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            }
+        });
+
+        display_model.position.set(0, 0, 0);
+        display_model.scale.set(1.5, 1.5, 1.5);
+        const base_scale = display_model.scale;
+        console.log(base_scale);
+        scene.add(display_model);
+
+        carinfo.innerHTML = "Scuderia Ferrari F1 SF23"
+        document.getElementById('progress').style.display = 'none';
+    }, (xhr) => {
+        console.log(`loading ${xhr.loaded / xhr.total * 100}%`);
+    }, (error) => {
+        console.error(error);
+    });
+    })
+
+
+    //default
+    loader = new GLTFLoader().setPath('models/sf23/');
     loader.load('scene.gltf', (gltf) => {
         console.log('loading model');
         display_model = gltf.scene;

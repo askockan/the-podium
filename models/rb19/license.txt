@@ -1,0 +1,11 @@
+Model Information:
+* title:	Oracle Red Bull F1 Car RB19 2023
+* source:	https://sketchfab.com/3d-models/oracle-red-bull-f1-car-rb19-2023-e4afe46f3aab4b23a418da06fc163821
+* author:	Redgrund (https://sketchfab.com/redgrund)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Oracle Red Bull F1 Car RB19 2023" (https://sketchfab.com/3d-models/oracle-red-bull-f1-car-rb19-2023-e4afe46f3aab4b23a418da06fc163821) by Redgrund (https://sketchfab.com/redgrund) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
