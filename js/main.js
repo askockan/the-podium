@@ -3,12 +3,14 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ARButton } from 'three/addons/webxr/ARButton.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
+const header = document.getElementById('heading');
 const modelSlider = document.getElementById('model-slider');
 const modelKg = document.getElementById('modelkg');
 const navbutton = document.getElementById('navbutton');
 const sidenav = document.getElementById('sidenav');
 const sideNavCSS = window.getComputedStyle(sidenav, null);
 const carinfo = document.getElementById('carinfo');
+const progress = document.getElementById('progress')
 
 
 const sf23 = document.getElementById('sf23');
@@ -38,17 +40,14 @@ document.getElementById("ARButton").addEventListener('click', () => {
 
 function init() {
 
-    let x = true;
     navbutton.addEventListener('click', () => {
         let sideNavMarginL = sideNavCSS.getPropertyValue('margin-left');
         if (sideNavMarginL == '-215px') {
             sidenav.style.marginLeft = '0';
             navbutton.classList.toggle('active');
-            x = false;
         } else {
             sidenav.style.marginLeft = '-215px';
             navbutton.classList.toggle('active');
-            x = true;
         }
     })
     
@@ -145,8 +144,17 @@ function init() {
 
     rb19.addEventListener("click", () => {
         scene.remove(display_model);
-        document.getElementById('progress').style.display = 'flex';
-        console.log("rb19 click");
+        progress.style.display = 'flex';
+        document.body.style.background = 'linear-gradient(to top, #F59631, #1E41A0)'
+        carinfo.style.color = '#F59631';
+        carinfo.style.borderColor = '#F59631';
+        header.style.color = '#F59631';
+        modelSlider.value = 2;
+        modelSlider.max = 2.7;
+        modelSlider.min = 1.5;
+        modelKg.innerHTML = "1066 KG";
+        sidenav.style.marginLeft = '-215px';
+        navbutton.classList.toggle('active');
         loader = new GLTFLoader().setPath('models/rb19/');
         loader.load('scene.gltf', (gltf) => {
         console.log('loading model');
@@ -159,14 +167,14 @@ function init() {
             }
         });
 
-        display_model.position.set(0, 0, 0);
-        display_model.scale.set(1.5, 1.5, 1.5);
+        display_model.position.set(0, 0, -.7);
+        display_model.scale.set(2, 2, 2);
         const base_scale = display_model.scale;
         console.log(base_scale);
         scene.add(display_model);
 
         carinfo.innerHTML = "Oracle Red Bull F1 RB19"
-        document.getElementById('progress').style.display = 'none';
+        progress.style.display = 'none';
     }, (xhr) => {
         console.log(`loading ${xhr.loaded / xhr.total * 100}%`);
     }, (error) => {
@@ -176,8 +184,17 @@ function init() {
 
     sf23.addEventListener("click", () => {
         scene.remove(display_model);
-        document.getElementById('progress').style.display = 'flex';
-        console.log("rb19 click");
+        progress.style.display = 'flex';
+        document.body.style.background = 'linear-gradient(to top, #c31432, #240b36)'
+        carinfo.style.color = '#c31432';
+        carinfo.style.borderColor = '#c31432';
+        header.style.color = '#c31432';
+        modelSlider.value = 1.5;
+        modelSlider.max = 2.2;
+        modelSlider.min = 1;
+        modelKg.innerHTML = "800 KG";
+        sidenav.style.marginLeft = '-215px';
+        navbutton.classList.toggle('active');
         loader = new GLTFLoader().setPath('models/sf23/');
         loader.load('scene.gltf', (gltf) => {
         console.log('loading model');
@@ -197,7 +214,7 @@ function init() {
         scene.add(display_model);
 
         carinfo.innerHTML = "Scuderia Ferrari F1 SF23"
-        document.getElementById('progress').style.display = 'none';
+        progress.style.display = 'none';
     }, (xhr) => {
         console.log(`loading ${xhr.loaded / xhr.total * 100}%`);
     }, (error) => {
@@ -225,7 +242,7 @@ function init() {
         console.log(base_scale);
         scene.add(display_model);
 
-        document.getElementById('progress').style.display = 'none';
+        progress.style.display = 'none';
     }, (xhr) => {
         console.log(`loading ${xhr.loaded / xhr.total * 100}%`);
     }, (error) => {
