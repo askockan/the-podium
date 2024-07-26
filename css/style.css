@@ -14,25 +14,58 @@ body {
 #navbutton {
   width: 40px;
   height: 40px;
-  rotate: 90deg;
   transition: .5s ease-out;
-  top: 36%;
-  margin-left: 7px;
+  top: 36.15%;
+  margin-left: 10px;
   position: fixed;
   padding: 2px;
 }
 
-#navbutton:hover {
+#navbutton span {
+  height: 5px;
+  width: 88%;
+  background-color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 25px;
+  transform:  translate(-50%, -50%);
+  transition: .3s ease;
+}
+
+#navbutton span:nth-child(1) {
+  top: 25%;
+}
+
+#navbutton.active span:nth-child(1) {
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+#navbutton.active span:nth-child(2) {
+  opacity: 0;
+}
+
+#navbutton span:nth-child(3) {
+  top: 75%;
+}
+
+#navbutton.active span:nth-child(3) {
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+} 
+
+#navbutton:hover span {
   cursor: pointer;
-  border: gray outset 2px;
+  background-color: white;
 }
 
 .sidenav {
   position: absolute;
   background: linear-gradient(to top, whitesmoke, grey);
-  transition: .5s ease-in;
+  transition: .3s ease-in;
   top: 35%;
-  margin-left: -195.55px;
+  margin-left: -215px;
 }
 
 .sidenav h1 {
@@ -271,8 +304,6 @@ left: 5%;
   }
   
   #navbutton {
-    width: 35px;
-    height: 35px;
     top: 30%;
     padding: 1px;
   }
@@ -285,7 +316,6 @@ left: 5%;
   .sidenav {
     position: absolute;
     background: linear-gradient(to top, whitesmoke, grey);
-    transition: .5s ease-in;
     top: 28.5%;
     margin-left: -215px;
   }
@@ -309,7 +339,6 @@ left: 5%;
     padding: 10px;
     color: inherit;
     text-decoration: none;
-    transition: .2s ease-out;
   }
   
   .sidenav ul li #rb19 {

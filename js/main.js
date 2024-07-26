@@ -6,8 +6,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const modelSlider = document.getElementById('model-slider');
 const modelKg = document.getElementById('modelkg');
 const navbutton = document.getElementById('navbutton');
-const navcss = window.getComputedStyle(navbutton, null);
 const sidenav = document.getElementById('sidenav');
+const sideNavCSS = window.getComputedStyle(sidenav, null);
 const carinfo = document.getElementById('carinfo');
 
 
@@ -38,20 +38,17 @@ document.getElementById("ARButton").addEventListener('click', () => {
 
 function init() {
 
-
+    let x = true;
     navbutton.addEventListener('click', () => {
-        let navRotation = navcss.getPropertyValue("rotate");
-        let navTransform = navcss.getPropertyValue("transform");
-
-        if (navTransform == 'matrix(1, 0, 0, 1, 0, 0)') {
-            navbutton.style.marginLeft = '215px';
+        let sideNavMarginL = sideNavCSS.getPropertyValue('margin-left');
+        if (sideNavMarginL == '-215px') {
             sidenav.style.marginLeft = '0';
-            navbutton.style.transform = 'scaleY(-1)';
+            navbutton.classList.toggle('active');
+            x = false;
         } else {
             sidenav.style.marginLeft = '-215px';
-            navbutton.style.marginLeft = '7px';
-            navbutton.style.rotate = '90deg';
-            navbutton.style.transform = 'scaleY(1)';
+            navbutton.classList.toggle('active');
+            x = true;
         }
     })
     
