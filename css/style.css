@@ -24,7 +24,7 @@ body {
 #navbutton span {
   height: 5px;
   width: 88%;
-  background-color: black;
+  background-color: darkgray;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -123,6 +123,101 @@ body {
   font-weight: bold;
 }
 
+#login-ui {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  align-items: flex-start;
+  top: 10%;
+  margin-left: 5px;
+}
+
+#login-ui #google-sign-in {
+  cursor: pointer;
+  transition: color .3s, box-shadow .3s, padding .3s;
+      
+  padding: 12px 16px 12px 42px;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
+  
+  color: #757575;
+  font-size: 14px;
+  font-weight: 700;
+  
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTcuNiA5LjJsLS4xLTEuOEg5djMuNGg0LjhDMTMuNiAxMiAxMyAxMyAxMiAxMy42djIuMmgzYTguOCA4LjggMCAwIDAgMi42LTYuNnoiIGZpbGw9IiM0Mjg1RjQiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Ik05IDE4YzIuNCAwIDQuNS0uOCA2LTIuMmwtMy0yLjJhNS40IDUuNCAwIDAgMS04LTIuOUgxVjEzYTkgOSAwIDAgMCA4IDV6IiBmaWxsPSIjMzRBODUzIiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNNCAxMC43YTUuNCA1LjQgMCAwIDEgMC0zLjRWNUgxYTkgOSAwIDAgMCAwIDhsMy0yLjN6IiBmaWxsPSIjRkJCQzA1IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNOSAzLjZjMS4zIDAgMi41LjQgMy40IDEuM0wxNSAyLjNBOSA5IDAgMCAwIDEgNWwzIDIuNGE1LjQgNS40IDAgMCAxIDUtMy43eiIgZmlsbD0iI0VBNDMzNSIgZmlsbC1ydWxlPSJub256ZXJvIi8+PHBhdGggZD0iTTAgMGgxOHYxOEgweiIvPjwvZz48L3N2Zz4=);
+  background-color: white;
+  background-repeat: no-repeat;
+  background-position: 12px 11px;
+}
+
+#login-ui #sign-out {
+  cursor: pointer;
+  transition: color .3s, padding .3s, box-shadow .3s;
+      
+  padding: 12px 16px 12px 42px;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
+  
+  color: #757575;
+  font-size: 14px;
+  font-weight: 700;
+  
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTcuNiA5LjJsLS4xLTEuOEg5djMuNGg0LjhDMTMuNiAxMiAxMyAxMyAxMiAxMy42djIuMmgzYTguOCA4LjggMCAwIDAgMi42LTYuNnoiIGZpbGw9IiM0Mjg1RjQiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Ik05IDE4YzIuNCAwIDQuNS0uOCA2LTIuMmwtMy0yLjJhNS40IDUuNCAwIDAgMS04LTIuOUgxVjEzYTkgOSAwIDAgMCA4IDV6IiBmaWxsPSIjMzRBODUzIiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNNCAxMC43YTUuNCA1LjQgMCAwIDEgMC0zLjRWNUgxYTkgOSAwIDAgMCAwIDhsMy0yLjN6IiBmaWxsPSIjRkJCQzA1IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNOSAzLjZjMS4zIDAgMi41LjQgMy40IDEuM0wxNSAyLjNBOSA5IDAgMCAwIDEgNWwzIDIuNGE1LjQgNS40IDAgMCAxIDUtMy43eiIgZmlsbD0iI0VBNDMzNSIgZmlsbC1ydWxlPSJub256ZXJvIi8+PHBhdGggZD0iTTAgMGgxOHYxOEgweiIvPjwvZz48L3N2Zz4=);
+  background-color: white;
+  background-repeat: no-repeat;
+  background-position: 12px 11px;
+}
+
+#login-ui #sign-out, #google-sign-in {
+  margin-bottom: 50px;
+}
+
+#login-ui #sign-out:hover {
+  padding: 12px 16px 12px 48px;
+  color: black;
+}
+
+#login-ui #google-sign-in:hover {
+  padding: 12px 16px 12px 48px;
+  color: black;
+}
+
+#login-ui #sign-out:focus {
+  box-shadow: 
+  0 -1px 0 rgba(0, 0, 0, .04),
+  0 2px 4px rgba(0, 0, 0, .25),
+  0 0 0 3px #c8dafc;
+}
+
+#login-ui #google-sign-in:focus {
+  box-shadow: 
+  0 -1px 0 rgba(0, 0, 0, .04),
+  0 2px 4px rgba(0, 0, 0, .25),
+  0 0 0 3px #c8dafc;
+}
+
+#login-ui button, #login-ui input, #login-ui label{
+  display: inline-block;
+  border: 3px outset black;
+  color: black;
+  font-weight: bold;
+  font-size: 1.1rem;
+  background: linear-gradient(to top, whitesmoke, grey);
+  padding: 2px;
+  margin: 1.5px 5px;
+  transition: .3s ease;
+}
+
+#login-ui button:hover, #login-ui input:hover, #login-ui label:hover {
+  background-color: whitesmoke;
+  color:whitesmoke;
+  padding: 4px;
+  cursor: pointer;
+  border: 3px inset black;
+} 
+
 #carinfo {
   position: fixed;
   color: #c31432;
@@ -138,7 +233,21 @@ body {
 #progress {
   font-size: 3em;
   color: white;
-  position: fixed;
+  position: absolute;
+  bottom: 15%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+
+#load-info {
+  font-size: 2em;
+  color: white;
+  position: absolute;
+  bottom: 10%;
   width: 100%;
   height: 100%;
   display: flex;
@@ -359,5 +468,29 @@ left: 5%;
     cursor: pointer;
   }
   
+  #login-ui {
+    top: 24%;
+    transform: scale(75%);
+  }
+  
+  #login-ui button{
+    display: inline-block;
+    border: 3px outset black;
+    color: black;
+    font-weight: bold;
+    font-size: 1.1rem;
+    background: linear-gradient(to top, whitesmoke, grey);
+    padding: 2px;
+    margin: 1.5px 5px;
+    transition: .3s ease;
+  }
+  
+  #login-ui button:hover {
+    background-color: whitesmoke;
+    color:whitesmoke;
+    padding: 4px;
+    cursor: pointer;
+    border: 3px inset black;
+  } 
 }
 
