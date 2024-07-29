@@ -261,47 +261,6 @@ function animate( timestamp, frame ) {
     renderer.render( scene, camera );
 }
 
-function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgColor, textColor) {
-    scene.remove(display_model);
-    progress.style.display = 'flex';
-    loadInfo.style.display = 'flex';
-    document.body.style.background = bgColor;
-    carinfo.style.color = textColor;
-    carinfo.style.borderColor = textColor;
-    header.style.color = textColor;
-    modelSlider.value = baseScale;
-    modelSlider.max = maxScale;
-    modelSlider.min = minScale;
-    modelKg.innerHTML = `${533 * baseScale} KG`;
-    sidenav.style.marginLeft = '-215px';
-    navbutton.classList.toggle('active');
-
-    loader = new GLTFLoader().setPath(`models/${modelName}/`);
-    loader.load(`${modelName}.glb`, (gltf) => {
-        display_model = gltf.scene;
-        display_model.traverse((child) => {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        });
-
-        display_model.position.set(0, 0, 0);
-        display_model.scale.set(baseScale, baseScale, baseScale);
-        scene.add(display_model);
-
-        carinfo.style.display = 'fixed';
-        carinfo.innerHTML = carInfoText;
-        progress.style.display = 'none';
-        loadInfo.style.display = 'none';
-    }, (xhr) => {
-        let roundedload = Math.round(`${xhr.loaded / xhr.total * 100}`);
-        loadInfo.innerHTML= `loading ${roundedload}%`;
-    }, (error) => {
-        console.error(error);
-    });
-}
-
 export function userModelLoader(fileUrl) {
     progress.style.display = 'flex';
     loadInfo.style.display = 'flex';
