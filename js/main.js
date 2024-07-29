@@ -334,6 +334,10 @@ export function userModelLoader(fileUrl) {
 
         URL.revokeObjectURL(fileUrl);
 
+        modelSlider.value = 1.5;
+        modelSlider.max = 2.5;
+        modelSlider.min = 1;
+
         const base_scale = display_model.scale;
         console.log(base_scale);
         scene.add(display_model);
@@ -380,57 +384,6 @@ function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgCo
 
         carinfo.style.display = 'fixed';
         carinfo.innerHTML = carInfoText;
-        progress.style.display = 'none';
-        loadInfo.style.display = 'none';
-    }, (xhr) => {
-        let roundedload = Math.round(`${xhr.loaded / xhr.total * 100}`);
-        loadInfo.innerHTML= `loading ${roundedload}%`;
-    }, (error) => {
-        console.error(error);
-    });
-}
-
-export function userModelLoader(fileUrl) {
-    progress.style.display = 'flex';
-    loadInfo.style.display = 'flex';
-    scene.remove(display_model);
-    loader = new GLTFLoader();
-    loader.load(fileUrl, (gltf) => {
-        display_model = gltf.scene;
-
-        let model = display_model;
-        let bbox = new THREE.Box3().setFromObject(model);
-        let center = bbox.getCenter(new THREE.Vector3());
-        let size = bbox.getSize(new THREE.Vector3());
-
-        let maxAxis = Math.max(size.x, size.y, size.z);
-        model.scale.multiplyScalar(7 / maxAxis);
-        bbox.setFromObject(model);
-        bbox.getCenter(center);
-        bbox.getSize(size);
-
-        model.position.copy(center).multiplyScalar(-1);
-        model.position.y = 0;
-        
-        
-        display_model.traverse((child) => {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        });
-
-        URL.revokeObjectURL(fileUrl);
-
-        modelSlider.value = 1.5;
-        modelSlider.max = 2.5;
-        modelSlider.min = 1;
-
-        const base_scale = display_model.scale;
-        console.log(base_scale);
-        scene.add(display_model);
-
-        carinfo.style.display = 'none';
         progress.style.display = 'none';
         loadInfo.style.display = 'none';
     }, (xhr) => {
