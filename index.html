@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<link rel="stylesheet" href="css/style.css">
 	<script type="importmap">
 		{
@@ -12,6 +12,7 @@
 		  }
 		}
 	</script>
+	<script defer type="module" src="js/firebase.js"></script>
 	<title>The Podium</title>
 	<link rel="icon" href="css/favicon.png" type="image/x-icon">
 </head>
@@ -29,6 +30,14 @@
 		<span></span>
 		<span></span>
 	</div>
+	<div id="login-ui">
+        <button id="google-sign-in">Sign in with Google</button>
+        <button id="sign-out" style="display:none;">Sign Out</button>
+		<input type="file" id="userUpload" style="display: none;" accept=".glb">
+		<button id="modelUpload" style="display: none;">Upload Model</button>
+		<button id="modelSave" style="display: none;">Save Model</button>
+		<label for="modelSave" id="save-info" style="display: none;"></span>
+    </div>
 
 	<div id="heading">
 		<h1>The Podium</h1>
@@ -51,7 +60,8 @@
 	</div>
 	
 	<div id="model">
-		<div id="progress">Loading Model</div> 
+		<div id="progress">Loading Model</div>
+		<span id="load-info"></span>
 	</div>
 
 	
