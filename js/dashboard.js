@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            console.log(user);
             userDisplayName.innerHTML = "Signed in as: " + user.displayName;
             userEmail.innerHTML = user.email;
             UIForSignIn();
@@ -94,15 +93,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (user) {
             const userUID = user.uid;
             const modelsFolderRef = ref(storage, `${userUID}`);
-            console.log(modelsFolderRef);
             
             try {
                 const listResult = await listAll(modelsFolderRef);
-                console.log(listResult);
 
                 dashboard.innerHTML = '';
 
-                console.log(listResult.items)
                 for (const item of listResult.items) {
                     const url = await getDownloadURL(item);
                     const fileName = item.name;

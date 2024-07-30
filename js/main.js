@@ -300,7 +300,6 @@ export function userModelLoader(fileUrl) {
         modelSlider.min = 1;
 
         const base_scale = display_model.scale;
-        console.log(base_scale);
         scene.add(display_model);
 
         carinfo.style.display = 'none';
