@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as authSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as authSignOut, onAuthStateChanged, signInWithRedirect } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 import { userModelLoader } from './main.js';
@@ -90,20 +90,26 @@ function enableButtons() {
     userUploadBtn.style.opacity = '1';
     modelUploadBtn.style.opacity = '1';
     modelSaveBtn.style.opacity = '1'; 
+    cModelName.style.opacity = '1';
     userUploadBtn.style.cursor = 'pointer';
     userUploadBtn.disabled = false;
     modelUploadBtn.style.cursor = 'pointer';
     modelSaveBtn.style.cursor = 'pointer';
+    cModelName.style.cursor = 'pointer';
+    cModelName.disabled = false;
 }
 
 function disableButtons() {
     userUploadBtn.style.opacity = '0.6';
     modelUploadBtn.style.opacity = '0.6';
     modelSaveBtn.style.opacity = '0.6'; 
+    cModelName.style.opacity = '0.6';
     userUploadBtn.style.cursor = 'not-allowed';
     userUploadBtn.disabled = true;
     modelUploadBtn.style.cursor = 'not-allowed';
-    modelSaveBtn.style.cursor = 'not-allowed'; 
+    modelSaveBtn.style.cursor = 'not-allowed';
+    cModelName.style.cursor = 'not-allowed';
+    cModelName.disabled = true;
 }
 
 function uploadModel() {
