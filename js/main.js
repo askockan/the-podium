@@ -5,6 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const header = document.getElementById('heading');
 const modelSlider = document.getElementById('model-slider');
+const kgInfo = document.querySelector('.kginfo');
 const modelKg = document.getElementById('modelkg');
 const navbutton = document.getElementById('navbutton');
 const sidenav = document.getElementById('sidenav');
@@ -264,6 +265,7 @@ function animate( timestamp, frame ) {
 export function userModelLoader(fileUrl) {
     progress.style.display = 'flex';
     loadInfo.style.display = 'flex';
+    kgInfo.style.display = 'none';
     scene.remove(display_model);
     loader = new GLTFLoader();
     loader.load(fileUrl, (gltf) => {
@@ -316,6 +318,9 @@ function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgCo
     scene.remove(display_model);
     progress.style.display = 'flex';
     loadInfo.style.display = 'flex';
+    kgInfo.style.display = 'flex';
+    carinfo.style.display = 'block';
+    carinfo.innerHTML = carInfoText;
     document.body.style.background = bgColor;
     carinfo.style.color = textColor;
     carinfo.style.borderColor = textColor;
@@ -323,7 +328,8 @@ function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgCo
     modelSlider.value = baseScale;
     modelSlider.max = maxScale;
     modelSlider.min = minScale;
-    modelKg.innerHTML = `${533 * baseScale} KG`;
+    let displayKG = Math.round(533 * `${baseScale}`);
+    modelKg.innerHTML = `${displayKG} KG`;
     sidenav.style.marginLeft = '-215px';
     navbutton.classList.toggle('active');
 
@@ -341,8 +347,6 @@ function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgCo
         display_model.scale.set(baseScale, baseScale, baseScale);
         scene.add(display_model);
 
-        carinfo.style.display = 'fixed';
-        carinfo.innerHTML = carInfoText;
         progress.style.display = 'none';
         loadInfo.style.display = 'none';
     }, (xhr) => {

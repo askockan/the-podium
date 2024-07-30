@@ -1,0 +1,124 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: monospace;
+}
+
+body {
+  background: linear-gradient(135deg, #146377, #154C84);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+#dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 200px;
+  padding-left: 20px;
+}
+
+.sidenav {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background: linear-gradient(60deg, whitesmoke, 10%, grey); 
+  overflow-x: hidden;
+}
+
+.sidenav h3 {
+  color: white;
+  padding: 16px;
+  text-decoration: none;
+  display: block;
+  font-weight: bold;
+  font-size: 2rem;
+  border-bottom: 7px outset darkgrey;
+  border-left: 6px outset darkgrey;
+  border-right: 6px outset darkgrey;
+  user-select: none;
+}
+
+.sidenav a {
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 600;
+  padding: 16px;
+  text-decoration: none;
+  display: block;
+  transition: .3s ease;
+}
+
+.sidenav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+  
+.sidenav #refreshBtn {
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 600;
+  padding: 16px;
+  text-decoration: none;
+  display: flex;
+  transition: .3s ease;
+  background: none;
+  border: none;
+  width: 200px;
+  text-align: left;
+}
+
+.sidenav #refreshBtn:hover {
+  background-color: #ddd;
+  color: black;
+  cursor: pointer;
+}
+
+.sidenav #google-sign-in, .sidenav #sign-out {
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 600;
+  padding: 16px;
+  text-decoration: none;
+  display: flex;
+  transition: .3s ease;
+  background: none;
+  border: none;
+  width: 200px;
+  text-align: left;
+}
+
+.sidenav #google-sign-in:hover, .sidenav #sign-out:hover {
+    background-color: #ddd;
+    color: red;
+    cursor: pointer;
+}
+
+.sidenav .userinfo {
+  color: white;
+  padding: 6px;
+  font-size: 1.2rem;
+  font-weight: 550;
+}
+
+.card {
+  border: 2px ridge gray;
+  margin: 10px;
+  padding: 10px;
+  width: 250px;
+  height: 200px;
+  text-align: center;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+}
+
+.card h3 {
+  font-size: 1.3rem;
+  color: whitesmoke;
+}

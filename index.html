@@ -31,11 +31,15 @@
 		<span></span>
 	</div>
 	<div id="login-ui">
-        <button id="google-sign-in">Sign in with Google</button>
-        <button id="sign-out" style="display:none;">Sign Out</button>
-		<input type="file" id="userUpload" style="display: none;" accept=".glb">
-		<button id="modelUpload" style="display: none;">Upload Model</button>
-		<button id="modelSave" style="display: none;">Save Model</button>
+        <div id="top-login">
+			<button id="google-sign-in">Sign in with Google</button>
+        	<button id="sign-out" style="display:none;">Sign Out</button>
+			<button id="dashboardBtn" style="display: none;">Dashboard</button>
+		</div>
+		<input type="file" id="userUpload" accept=".glb">
+		<button id="modelUpload">Upload Model</button>
+		<input type="text" id="cModelName" maxlength="25" minlength="3" size="30" placeholder="Enter a name for your model.">
+		<button id="modelSave">Save Model</button>
 		<label for="modelSave" id="save-info" style="display: none;"></span>
     </div>
 

@@ -20,22 +20,25 @@ const provider = new GoogleAuthProvider();
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-
 const googleSignIn = document.getElementById('google-sign-in');
 const googleSignOut = document.getElementById('sign-out');
 const userUploadBtn = document.getElementById('userUpload');
 const modelUploadBtn = document.getElementById('modelUpload');
 const modelSaveBtn = document.getElementById('modelSave');
+const dashboardBtn = document.getElementById('dashboardBtn');
+const navBtn = document.getElementById('navbutton');
+const cModelName = document.getElementById('cModelName');
 
 googleSignIn.addEventListener('click', signIn);
 googleSignOut.addEventListener('click', signOut);
 modelUploadBtn.addEventListener('click', uploadModel);
 modelSaveBtn.addEventListener('click', saveModel);
-
+dashboardBtn.addEventListener('click', dashboardDirect);
+cModelName.addEventListener('input', ignoreSpace);
 
 function signIn() {
     signInWithPopup(auth, provider)
-    .then((result) => {
+    .then((result) => {;
         const user = result.user;
         UIForSignIn();
     }).catch((error) => {
@@ -51,6 +54,16 @@ function signOut() {
     });
 }
 
+function dashboardDirect() {
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            window.location.href = 'dashboard.html';
+        } else {
+            alert("You need to sign in to open dashboard.");
+        }
+    })
+}
+
 onAuthStateChanged(auth, (user) => {
     if (user) {
         UIForSignIn();
@@ -60,55 +73,84 @@ onAuthStateChanged(auth, (user) => {
 });
 
 function UIForSignIn() {
+    enableButtons(); 
     googleSignOut.style.display = 'block';
     googleSignIn.style.display = 'none';
-    userUploadBtn.style.display = 'inline-block';
-    modelUploadBtn.style.display = 'inline-block';
-    modelSaveBtn.style.display = 'inline-block';
-
+    dashboardBtn.style.display = 'block';
 }
 
 function UIForSignOut() {
+    disableButtons();
     googleSignOut.style.display = 'none';
     googleSignIn.style.display = 'block';
-    userUploadBtn.style.display = 'none';
-    modelUploadBtn.style.display = 'none';
-    modelSaveBtn.style.display = 'none';
+    dashboardBtn.style.display = 'none';
+}
+
+function enableButtons() {
+    userUploadBtn.style.opacity = '1';
+    modelUploadBtn.style.opacity = '1';
+    modelSaveBtn.style.opacity = '1'; 
+    userUploadBtn.style.cursor = 'pointer';
+    userUploadBtn.disabled = false;
+    modelUploadBtn.style.cursor = 'pointer';
+    modelSaveBtn.style.cursor = 'pointer';
+}
+
+function disableButtons() {
+    userUploadBtn.style.opacity = '0.6';
+    modelUploadBtn.style.opacity = '0.6';
+    modelSaveBtn.style.opacity = '0.6'; 
+    userUploadBtn.style.cursor = 'not-allowed';
+    userUploadBtn.disabled = true;
+    modelUploadBtn.style.cursor = 'not-allowed';
+    modelSaveBtn.style.cursor = 'not-allowed'; 
 }
 
 function uploadModel() {
-    const file = userUploadBtn.files[0]
-    if (file) {
-        console.log(file);
-        const fileUrl = URL.createObjectURL(file);
-        userModelLoader(fileUrl);
-    } else {
-        alert("Please select a model first.");
-    }
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const file = userUploadBtn.files[0]
+            if (file) {
+                const fileUrl = URL.createObjectURL(file);
+                userModelLoader(fileUrl);
+            } else {
+                alert("Please select a model first.");
+            }
+        } else {
+            alert("You need to be signed in to upload files.");
+        }
+    })
+}
+
+function ignoreSpace() {
+    cModelName.value = cModelName.value.replace(/\s+/g, '');
 }
 
 async function saveModel() {
     const file = userUploadBtn.files[0]
-    
     if (!file) {
         alert("Please select a file to upload.")
         return;
     }
 
+    if (!cModelName.value || !cModelName.validity.valid) {
+        alert("Please enter a valid name for your model.")
+        return;
+    }
+    
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             const userUID = user.uid;
-            const storageRef = ref(storage, `${userUID}/${file.name}`);
+            let holderforfilename = cModelName.value;
+            const storageRef = ref(storage, `${userUID}/${holderforfilename}.glb`);
 
             try {
                 await uploadBytes(storageRef, file);
-                /* const downloadURL = await getDownloadURL(storageRef); */
                 const uploadTask = uploadBytesResumable(storageRef, file);
 
                 uploadTask.on('state_changed', 
                     (snapshot) => {
                         const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                        console.log('Upload is ' + progress + '% done');
                         document.getElementById('save-info').style.display = 'block';
                         document.getElementById('save-info').innerText = 'Upload is ' + progress + '% done';
                     }, 
@@ -117,19 +159,12 @@ async function saveModel() {
                         document.getElementById('save-info').style.display = 'none';
                     }, 
                     () => {
+                        document.getElementById('save-info').style.display = 'none';
+                        cModelName.value = "";
+                        userUploadBtn.value = "";
                         alert("File uploaded successfully!");
                     }
                 );
-
-                // Store model metadata in Firestore
-                /* await setDoc(doc(db, 'users', userUID), {
-                    userUpload: {
-                        filename: file.name,
-                        url: downloadURL,
-                        uploadTime: new Date()
-                    }
-                }); */
-
             } catch (error) {
                 console.error("Error uploading file:", error);
                 alert("Error uploading file. Please try again.");
