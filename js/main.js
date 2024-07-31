@@ -13,6 +13,8 @@ const sideNavCSS = window.getComputedStyle(sidenav, null);
 const carinfo = document.getElementById('carinfo');
 const progress = document.getElementById('progress');
 const loadInfo = document.getElementById('load-info');
+const xAxisSlider = document.getElementById('x-slider');
+const yAxisSlider = document.getElementById('y-slider');
 
 const sf23 = document.getElementById('sf23');
 const rb19 = document.getElementById('rb19');
@@ -52,22 +54,41 @@ function init() {
     })
     
     //
-    let lastVal = modelSlider.defaultValue;
+    let lastVal0 = modelSlider.defaultValue;
     modelSlider.addEventListener('input', (e) => {
         if (display_model) {
-
-            if (lastVal) {
-                if(lastVal > e.target.value) {
+            if (lastVal0) {
+                if(lastVal0 > e.target.value) {
                     display_model.scale.addScalar(-0.1);
                 } else {
                     display_model.scale.addScalar(0.1);
                 }
-                lastVal = e.target.value;
+                lastVal0 = e.target.value;
             }
 
             ambientLight.intensity = e.target.value*11;
             let currentKg = 533*e.target.value
             modelKg.innerHTML = Math.round(currentKg) + " " + "KG";
+        }
+    });
+
+    let lastVal1 = xAxisSlider.defaultValue;
+    xAxisSlider.addEventListener('input', (e) => {
+        if (display_model) {
+            if (lastVal1) {
+                lastVal1 = e.target.value;
+                display_model.position.setX(e.target.value - 2);
+            }
+        }
+    });
+
+    let lastVal2 = yAxisSlider.defaultValue;
+    yAxisSlider.addEventListener('input', (e) => {
+        if (display_model) {
+            if (lastVal2) {
+                lastVal2 = e.target.value;
+                display_model.position.setY(e.target.value - 2);
+            }
         }
     });
     
@@ -82,7 +103,7 @@ function init() {
 
     //
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 2, 1000);
     camera.position.set(0, 5, 11);
 
     //
@@ -298,6 +319,8 @@ export function userModelLoader(fileUrl) {
         modelSlider.value = 1.5;
         modelSlider.max = 2.5;
         modelSlider.min = 1;
+        xAxisSlider.value = xAxisSlider.defaultValue;
+        yAxisSlider.value = yAxisSlider.defaultValue;
 
         const base_scale = display_model.scale;
         scene.add(display_model);

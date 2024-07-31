@@ -26,7 +26,6 @@ const userUploadBtn = document.getElementById('userUpload');
 const modelUploadBtn = document.getElementById('modelUpload');
 const modelSaveBtn = document.getElementById('modelSave');
 const dashboardBtn = document.getElementById('dashboardBtn');
-const navBtn = document.getElementById('navbutton');
 const cModelName = document.getElementById('cModelName');
 
 googleSignIn.addEventListener('click', signIn);
