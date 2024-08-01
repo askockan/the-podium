@@ -15,6 +15,7 @@ const progress = document.getElementById('progress');
 const loadInfo = document.getElementById('load-info');
 const xAxisSlider = document.getElementById('x-slider');
 const yAxisSlider = document.getElementById('y-slider');
+const sliderResetBtn = document.getElementById('reset');
 
 const sf23 = document.getElementById('sf23');
 const rb19 = document.getElementById('rb19');
@@ -23,7 +24,6 @@ let container;
 let camera, scene, renderer;
 let loader;
 let controller, controls;
-let groundGeometry, groundTexture, groundMaterial, groundMesh
 let display_model;
 
 let reticle;
@@ -37,7 +37,6 @@ animate();
 
 document.getElementById("ARButton").addEventListener('click', () => {
     display_model.visible = false;
-    display_model.scale.set(base_scale);
 })
 
 function init() {
@@ -54,16 +53,20 @@ function init() {
     })
     
     //
-    let lastVal0 = modelSlider.defaultValue;
+    let lastVal = modelSlider.defaultValue;
     modelSlider.addEventListener('input', (e) => {
         if (display_model) {
-            if (lastVal0) {
-                if(lastVal0 > e.target.value) {
-                    display_model.scale.addScalar(-0.1);
+            if (lastVal) {
+                if(lastVal > e.target.value) {
+                    if(!display_model.scale.getComponent(0) >= 0 || !display_model.scale.getComponent(1) >= 0 || !display_model.scale.getComponent(2) >= 0 ) {
+                        display_model.scale.addScalar(-0.1);
+                    } else {
+                        return;
+                    } 
                 } else {
                     display_model.scale.addScalar(0.1);
                 }
-                lastVal0 = e.target.value;
+                lastVal = e.target.value;
             }
 
             ambientLight.intensity = e.target.value*11;
@@ -72,26 +75,37 @@ function init() {
         }
     });
 
-    let lastVal1 = xAxisSlider.defaultValue;
     xAxisSlider.addEventListener('input', (e) => {
         if (display_model) {
-            if (lastVal1) {
-                lastVal1 = e.target.value;
+            if (e.target.value) {
                 display_model.position.setX(e.target.value - 2);
             }
         }
     });
 
-    let lastVal2 = yAxisSlider.defaultValue;
     yAxisSlider.addEventListener('input', (e) => {
         if (display_model) {
-            if (lastVal2) {
-                lastVal2 = e.target.value;
+            if (e.target.value) {
                 display_model.position.setY(e.target.value - 2);
             }
         }
     });
     
+    sliderResetBtn.addEventListener('click', () => {
+        controls.reset();
+        let x = modelSlider.value - modelSlider.defaultValue;
+        const roundedX = Math.floor(x * 100) / 100;
+        display_model.scale.set(modelSlider.value - roundedX, modelSlider.value - roundedX, modelSlider.value - roundedX);
+        display_model.position.setY(0);
+        display_model.position.setX(0);
+        modelSlider.value = modelSlider.defaultValue;
+        ambientLight.intensity = 15;
+        xAxisSlider.value = xAxisSlider.defaultValue;
+        yAxisSlider.value = yAxisSlider.defaultValue;
+        let displayKG = Math.round(533 * modelSlider.defaultValue);
+        modelKg.innerHTML = `${displayKG} KG`;
+    })
+
     //
 
     container = document.createElement( 'div' );
@@ -134,12 +148,11 @@ function init() {
     controls.enableDamping = true;
     controls.dampingFactor = 0.1;
     controls.enablePan = false;
-    controls.minDistance = 2;
+    controls.minDistance = 3;
     controls.maxDistance = 20;
-    controls.minPolarAngle = 0.5;
-    controls.maxPolarAngle = 1.6;
     controls.autoRotate = false;
-    controls.target = new THREE.Vector3(0, 1, 0);
+    controls.target = new THREE.Vector3(0, 0, 0);
+    controls.saveState();
     controls.update();
     
     //
@@ -152,23 +165,6 @@ function init() {
     options.domOverlay = {root: document.getElementById("content")};
     document.body.appendChild( ARButton.createButton(renderer, options));
     
-    //
-
-    groundGeometry = new THREE.PlaneGeometry(10, 10);
-    groundGeometry.rotateX(-Math.PI / 2);
-    groundTexture = new THREE.TextureLoader().load('models/ground/asphalt.jpg');
-    groundTexture.wrapS = THREE.RepeatWrapping;
-    groundTexture.repeat.set(1, 1);
-    groundTexture.anisotropy = 2;
-    groundMaterial = new THREE.MeshStandardMaterial( { 
-    map: groundTexture,
-    side: THREE.DoubleSide 
-    } );
-    groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
-    groundMesh.castShadow = false;
-    groundMesh.receiveShadow = true;
-    scene.add(groundMesh);
-
     //
 
     rb19.addEventListener("click", () => modelLoader('rb19', 'Oracle Red Bull F1 RB19', 2, 2.7, 1.5, 'linear-gradient(to top, #F59631, #1E41A0)', '#F59631'));
@@ -188,7 +184,6 @@ function init() {
 
         display_model.position.set(0, 0, 0);
         display_model.scale.set(1.5, 1.5, 1.5);
-        const base_scale = display_model.scale;
         scene.add(display_model);
 
         progress.style.display = 'none';
@@ -200,20 +195,20 @@ function init() {
         console.error(error);
     });
 
+    //
+
     function onSelect() {
         if ( reticle.visible && display_model ) {
             if (ar_scene_model) {
                 scene.remove(ar_scene_model);
             }
             reticle.matrix.decompose( display_model.position, display_model.quaternion, display_model.scale );
-            display_model.scale.y = Math.random() * 2 + 1;
             scene.add( display_model );
 
             ar_scene_model = display_model;
             
             display_model.position.setFromMatrixPosition(reticle.matrix);
             display_model.visible = true;
-
         }
 
     }
@@ -265,7 +260,6 @@ function animate( timestamp, frame ) {
                 hitTestSource = null;
 
                 reticle.visible = false;
-                display_model.scale.set(base_scale);
             } );
             hitTestSourceRequested = true;
         }
@@ -292,21 +286,20 @@ export function userModelLoader(fileUrl) {
     loader.load(fileUrl, (gltf) => {
         display_model = gltf.scene;
 
-        let model = display_model;
+        /* let model = display_model;
         let bbox = new THREE.Box3().setFromObject(model);
         let center = bbox.getCenter(new THREE.Vector3());
         let size = bbox.getSize(new THREE.Vector3());
 
         let maxAxis = Math.max(size.x, size.y, size.z);
-        model.scale.multiplyScalar(7 / maxAxis);
+        model.scale.multiplyScalar(2 / maxAxis);
         bbox.setFromObject(model);
         bbox.getCenter(center);
         bbox.getSize(size);
 
-        model.position.copy(center).multiplyScalar(-1);
-        model.position.y = 0;
-        
-        
+        model.position.copy(center).multiplyScalar(-1); 
+        display_model.position.y = 0; */
+
         display_model.traverse((child) => {
             if (child.isMesh) {
                 child.castShadow = true;
@@ -317,12 +310,10 @@ export function userModelLoader(fileUrl) {
         URL.revokeObjectURL(fileUrl);
 
         modelSlider.value = 1.5;
-        modelSlider.max = 2.5;
-        modelSlider.min = 1;
+        modelSlider.defaultValue = modelSlider.value;
         xAxisSlider.value = xAxisSlider.defaultValue;
         yAxisSlider.value = yAxisSlider.defaultValue;
 
-        const base_scale = display_model.scale;
         scene.add(display_model);
 
         carinfo.style.display = 'none';
@@ -348,8 +339,11 @@ function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgCo
     carinfo.style.borderColor = textColor;
     header.style.color = textColor;
     modelSlider.value = baseScale;
+    modelSlider.defaultValue = modelSlider.value;
     modelSlider.max = maxScale;
     modelSlider.min = minScale;
+    xAxisSlider.value = xAxisSlider.defaultValue;
+    yAxisSlider.value = yAxisSlider.defaultValue;
     let displayKG = Math.round(533 * `${baseScale}`);
     modelKg.innerHTML = `${displayKG} KG`;
     sidenav.style.marginLeft = '-215px';
