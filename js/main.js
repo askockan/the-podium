@@ -16,9 +16,15 @@ const loadInfo = document.getElementById('load-info');
 const xAxisSlider = document.getElementById('x-slider');
 const yAxisSlider = document.getElementById('y-slider');
 const sliderResetBtn = document.getElementById('reset');
+//
+const arContent = document.getElementById('ar-content');
+const arPlaceBtn = document.getElementById('ar-place');
+const arScaleSlider = document.getElementById('ar-scale');
+const arScaleKg = document.getElementById('ar-scale-kg');
 
 const sf23 = document.getElementById('sf23');
 const rb19 = document.getElementById('rb19');
+const artest = document.getElementById('artest');
 
 let container;
 let camera, scene, renderer;
@@ -30,13 +36,29 @@ let reticle;
 
 let hitTestSource = null;
 let hitTestSourceRequested = false;
-let ar_scene_model = null;
 
 init();
 animate();
 
 document.getElementById("ARButton").addEventListener('click', () => {
     display_model.visible = false;
+    camera.fov = 75;
+    camera.updateProjectionMatrix();
+})
+
+function arPlace() {
+    if ( reticle.visible && display_model ) {
+        display_model.position.setFromMatrixPosition(reticle.matrix);
+        display_model.visible = true;
+    }
+}
+
+arPlaceBtn.addEventListener('click', () => arPlace())
+
+arScaleSlider.addEventListener('input', (e) => {
+    display_model.scale.set(e.target.value, e.target.value, e.target.value);
+    let arModelKg = e.target.value * 4;
+    arScaleKg.innerHTML = `${arModelKg} KG`;
 })
 
 function init() {
@@ -53,14 +75,16 @@ function init() {
     })
     
     //
+    // TO-DO: works fine on slow slide, problem with clicks on slider.
     let lastVal = modelSlider.defaultValue;
     modelSlider.addEventListener('input', (e) => {
         if (display_model) {
             if (lastVal) {
                 if(lastVal > e.target.value) {
-                    if(!display_model.scale.getComponent(0) >= 0 || !display_model.scale.getComponent(1) >= 0 || !display_model.scale.getComponent(2) >= 0 ) {
+                    if(display_model.scale.getComponent(0) > 0.1 || display_model.scale.getComponent(1) > 0.1 || display_model.scale.getComponent(2) > 0.1 ) {
                         display_model.scale.addScalar(-0.1);
                     } else {
+                        lastVal = e.target.value;
                         return;
                     } 
                 } else {
@@ -69,7 +93,6 @@ function init() {
                 lastVal = e.target.value;
             }
 
-            ambientLight.intensity = e.target.value*11;
             let currentKg = 533*e.target.value
             modelKg.innerHTML = Math.round(currentKg) + " " + "KG";
         }
@@ -91,19 +114,24 @@ function init() {
         }
     });
     
-    sliderResetBtn.addEventListener('click', () => {
+    function resetModel() {
         controls.reset();
+        controls.update();
         let x = modelSlider.value - modelSlider.defaultValue;
         const roundedX = Math.floor(x * 100) / 100;
         display_model.scale.set(modelSlider.value - roundedX, modelSlider.value - roundedX, modelSlider.value - roundedX);
         display_model.position.setY(0);
         display_model.position.setX(0);
         modelSlider.value = modelSlider.defaultValue;
-        ambientLight.intensity = 15;
+        lastVal = modelSlider.defaultValue;
         xAxisSlider.value = xAxisSlider.defaultValue;
         yAxisSlider.value = yAxisSlider.defaultValue;
         let displayKG = Math.round(533 * modelSlider.defaultValue);
-        modelKg.innerHTML = `${displayKG} KG`;
+        modelKg.innerHTML = `${displayKG} KG`;   
+    }
+    
+    sliderResetBtn.addEventListener('click', () => {
+        resetModel();
     })
 
     //
@@ -117,20 +145,22 @@ function init() {
 
     //
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 2, 1000);
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 5, 11);
 
     //
 
-    const spotLight = new THREE.SpotLight(0xffffff, 2000, 100, 0.22, 1);
+
+    // TO-DO: make this optional with button smt..
+    /* const spotLight = new THREE.SpotLight(0xffffff, 2000, 100, 0.22, 1);
     spotLight.position.set(0, 15, 0);
     spotLight.castShadow = true;
     spotLight.shadow.bias = -0.0001;
-    scene.add(spotLight);
+    scene.add(spotLight); */
 
-    const ambientLight = new THREE.AmbientLight(0x404040, 15);
-    ambientLight.position.set(1, 0, 0);
-    spotLight.castShadow = false;
+    const ambientLight = new THREE.AmbientLight(0x404040, 100);
+    ambientLight.position.set(1, 1, 0);
+    /* spotLight.castShadow = false; */
     scene.add(ambientLight);
 
     //
@@ -151,7 +181,7 @@ function init() {
     controls.minDistance = 3;
     controls.maxDistance = 20;
     controls.autoRotate = false;
-    controls.target = new THREE.Vector3(0, 0, 0);
+    controls.target = new THREE.Vector3(0, 1, 0);
     controls.saveState();
     controls.update();
     
@@ -162,13 +192,14 @@ function init() {
         optionalFeatures: ['dom-overlay']
     }
 
-    options.domOverlay = {root: document.getElementById("content")};
+    options.domOverlay = {root: document.getElementById("ar-content")};
     document.body.appendChild( ARButton.createButton(renderer, options));
     
     //
 
-    rb19.addEventListener("click", () => modelLoader('rb19', 'Oracle Red Bull F1 RB19', 2, 2.7, 1.5, 'linear-gradient(to top, #F59631, #1E41A0)', '#F59631'));
-    sf23.addEventListener("click", () => modelLoader('sf23', 'Scuderia Ferrari F1 SF23', 1.5, 2.2, 1, 'linear-gradient(to top, #c31432, #240b36)', '#c31432'));
+    rb19.addEventListener("click", () => modelLoader('rb19', 'Oracle Red Bull F1 RB19 ', 2, 2.7, 1.5, 'linear-gradient(to top, #F59631, #1E41A0)', '#F59631'));
+    sf23.addEventListener("click", () => modelLoader('sf23', 'Scuderia Ferrari F1 SF23 ', 1.5, 2.2, 1, 'linear-gradient(to top, #c31432, #240b36)', '#c31432'));
+    artest.addEventListener("click", () => modelLoader('artest', 'AR Test Model ', 1, "" , "", 'linear-gradient(to top, #636363, #a2ab58)', '#636363'))
 
 
     //default
@@ -197,25 +228,9 @@ function init() {
 
     //
 
-    function onSelect() {
-        if ( reticle.visible && display_model ) {
-            if (ar_scene_model) {
-                scene.remove(ar_scene_model);
-            }
-            reticle.matrix.decompose( display_model.position, display_model.quaternion, display_model.scale );
-            scene.add( display_model );
-
-            ar_scene_model = display_model;
-            
-            display_model.position.setFromMatrixPosition(reticle.matrix);
-            display_model.visible = true;
-        }
-
-    }
-
-    controller = renderer.xr.getController( 0 );
+    /* controller = renderer.xr.getController( 0 );
     controller.addEventListener( 'select', onSelect );
-    scene.add( controller );
+    scene.add( controller ); */
 
     reticle = new THREE.Mesh(
         new THREE.RingGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
@@ -260,6 +275,14 @@ function animate( timestamp, frame ) {
                 hitTestSource = null;
 
                 reticle.visible = false;
+                arPlaceBtn.style.display = 'none';
+                arScaleSlider.style.display = 'none';
+                arScaleKg.style.display = 'none';
+
+                resetModel();
+                camera.fov = 45;
+                camera.updateProjectionMatrix();
+                onWindowResize();
             } );
             hitTestSourceRequested = true;
         }
@@ -267,10 +290,18 @@ function animate( timestamp, frame ) {
             const hitTestResults = frame.getHitTestResults( hitTestSource );
             if ( hitTestResults.length ) {
                 const hit = hitTestResults[ 0 ];
+
+                arPlaceBtn.style.display = 'block';
+                arScaleSlider.style.display = 'block';
+                arScaleKg.style.display = 'block';
                 reticle.visible = true;
+
                 reticle.matrix.fromArray( hit.getPose( referenceSpace ).transform.matrix );
             } else {
                 reticle.visible = false;
+                arPlaceBtn.style.display = 'none';
+                arScaleSlider.style.display = 'none';
+                arScaleKg.style.display = 'none';
             }
         }
     }
@@ -309,7 +340,7 @@ export function userModelLoader(fileUrl) {
 
         URL.revokeObjectURL(fileUrl);
 
-        modelSlider.value = 1.5;
+        modelSlider.value = 1;
         modelSlider.defaultValue = modelSlider.value;
         xAxisSlider.value = xAxisSlider.defaultValue;
         yAxisSlider.value = yAxisSlider.defaultValue;
@@ -340,8 +371,8 @@ function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgCo
     header.style.color = textColor;
     modelSlider.value = baseScale;
     modelSlider.defaultValue = modelSlider.value;
-    modelSlider.max = maxScale;
-    modelSlider.min = minScale;
+    /* modelSlider.max = maxScale;
+    modelSlider.min = minScale; */
     xAxisSlider.value = xAxisSlider.defaultValue;
     yAxisSlider.value = yAxisSlider.defaultValue;
     let displayKG = Math.round(533 * `${baseScale}`);
@@ -365,6 +396,8 @@ function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgCo
 
         progress.style.display = 'none';
         loadInfo.style.display = 'none';
+        controls.reset();
+        controls.update();
     }, (xhr) => {
         let roundedload = Math.round(`${xhr.loaded / xhr.total * 100}`);
         loadInfo.innerHTML= `loading ${roundedload}%`;
