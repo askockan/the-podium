@@ -16,11 +16,12 @@ const loadInfo = document.getElementById('load-info');
 const xAxisSlider = document.getElementById('x-slider');
 const yAxisSlider = document.getElementById('y-slider');
 const sliderResetBtn = document.getElementById('reset');
+
 //
-const arContent = document.getElementById('ar-content');
 const arPlaceBtn = document.getElementById('ar-place');
 const arScaleSlider = document.getElementById('ar-scale');
 const arScaleKg = document.getElementById('ar-scale-kg');
+//
 
 const sf23 = document.getElementById('sf23');
 const rb19 = document.getElementById('rb19');
@@ -42,9 +43,33 @@ animate();
 
 document.getElementById("ARButton").addEventListener('click', () => {
     display_model.visible = false;
-    camera.fov = 75;
-    camera.updateProjectionMatrix();
+    display_model.scale.set(0.25, 0.25, 0.25);
 })
+
+function checkIntersections(touchOrigin, directionFromCamera) {
+    let raycaster = new THREE.Raycaster();
+    raycaster.set(touchOrigin, directionFromCamera)
+    const intersections = raycaster.intersectObject(scene.children[3], true);
+    if (intersections.length > 0) {
+        return intersections[0];
+    } else {
+        return null;
+    }
+}
+
+//TO-DO: find more convenient way instead of 'touchOrigin'
+function anchor() {
+    const touchOrigin = new THREE.Vector3().setFromMatrixPosition(controller.matrixWorld);
+    const cameraPosition = new THREE.Vector3().setFromMatrixPosition(camera.matrixWorld);
+    const directionFromCamera = touchOrigin.clone().sub(cameraPosition).normalize();
+    const intersection = checkIntersections(touchOrigin, directionFromCamera);
+
+    if (intersection) {
+        const intersectionPoint = intersection.point;
+        display_model.position.copy(intersectionPoint);
+        display_model.visible = true;
+    }
+}
 
 function arPlace() {
     if ( reticle.visible && display_model ) {
@@ -228,9 +253,9 @@ function init() {
 
     //
 
-    /* controller = renderer.xr.getController( 0 );
-    controller.addEventListener( 'select', onSelect );
-    scene.add( controller ); */
+    controller = renderer.xr.getController( 0 );
+    controller.addEventListener('select', anchor);
+    scene.add( controller );
 
     reticle = new THREE.Mesh(
         new THREE.RingGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
@@ -243,7 +268,6 @@ function init() {
     //
 
     window.addEventListener( 'resize', onWindowResize );
-
 }
 
 function onWindowResize() {
@@ -278,11 +302,6 @@ function animate( timestamp, frame ) {
                 arPlaceBtn.style.display = 'none';
                 arScaleSlider.style.display = 'none';
                 arScaleKg.style.display = 'none';
-
-                resetModel();
-                camera.fov = 45;
-                camera.updateProjectionMatrix();
-                onWindowResize();
             } );
             hitTestSourceRequested = true;
         }
@@ -317,6 +336,7 @@ export function userModelLoader(fileUrl) {
     loader.load(fileUrl, (gltf) => {
         display_model = gltf.scene;
 
+        //TO-DO: problem with 'multiplyScalar' method, search fix
         /* let model = display_model;
         let bbox = new THREE.Box3().setFromObject(model);
         let center = bbox.getCenter(new THREE.Vector3());
@@ -371,8 +391,6 @@ function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgCo
     header.style.color = textColor;
     modelSlider.value = baseScale;
     modelSlider.defaultValue = modelSlider.value;
-    /* modelSlider.max = maxScale;
-    modelSlider.min = minScale; */
     xAxisSlider.value = xAxisSlider.defaultValue;
     yAxisSlider.value = yAxisSlider.defaultValue;
     let displayKG = Math.round(533 * `${baseScale}`);
@@ -383,11 +401,14 @@ function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgCo
     loader = new GLTFLoader().setPath(`models/${modelName}/`);
     loader.load(`${modelName}.glb`, (gltf) => {
         display_model = gltf.scene;
+        let renderOrder = 1;
         display_model.traverse((child) => {
             if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-            }
+            }   
+            child.renderOrder = renderOrder;
+                renderOrder++;
         });
 
         display_model.position.set(0, 0, 0);
