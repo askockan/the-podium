@@ -21,6 +21,7 @@ const sliderResetBtn = document.getElementById('reset');
 const arPlaceBtn = document.getElementById('ar-place');
 const arScaleSlider = document.getElementById('ar-scale');
 const arScaleKg = document.getElementById('ar-scale-kg');
+const arRemoveBtn = document.getElementById('ar-remove');
 //
 
 const sf23 = document.getElementById('sf23');
@@ -71,6 +72,12 @@ function anchor() {
     }
 }
 
+function arRemove() {
+    if ( reticle.visible && display_model.visible == true) {
+        display_model.visible = false;
+    }
+}
+
 function arPlace() {
     if ( reticle.visible && display_model ) {
         display_model.position.setFromMatrixPosition(reticle.matrix);
@@ -78,7 +85,8 @@ function arPlace() {
     }
 }
 
-arPlaceBtn.addEventListener('click', () => arPlace())
+arPlaceBtn.addEventListener('click', () => arPlace());
+arRemoveBtn.addEventListener('click', () => arRemove());
 
 arScaleSlider.addEventListener('input', (e) => {
     display_model.scale.set(e.target.value, e.target.value, e.target.value);
@@ -141,7 +149,6 @@ function init() {
     
     function resetModel() {
         controls.reset();
-        controls.update();
         let x = modelSlider.value - modelSlider.defaultValue;
         const roundedX = Math.floor(x * 100) / 100;
         display_model.scale.set(modelSlider.value - roundedX, modelSlider.value - roundedX, modelSlider.value - roundedX);
@@ -302,6 +309,9 @@ function animate( timestamp, frame ) {
                 arPlaceBtn.style.display = 'none';
                 arScaleSlider.style.display = 'none';
                 arScaleKg.style.display = 'none';
+                arRemoveBtn.style.display = 'none';
+                
+                window.location.href = 'index.html';
             } );
             hitTestSourceRequested = true;
         }
@@ -313,6 +323,7 @@ function animate( timestamp, frame ) {
                 arPlaceBtn.style.display = 'block';
                 arScaleSlider.style.display = 'block';
                 arScaleKg.style.display = 'block';
+                arRemoveBtn.style.display = 'block';
                 reticle.visible = true;
 
                 reticle.matrix.fromArray( hit.getPose( referenceSpace ).transform.matrix );
@@ -321,6 +332,7 @@ function animate( timestamp, frame ) {
                 arPlaceBtn.style.display = 'none';
                 arScaleSlider.style.display = 'none';
                 arScaleKg.style.display = 'none';
+                arRemoveBtn.style.display = 'none';
             }
         }
     }

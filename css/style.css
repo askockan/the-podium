@@ -461,7 +461,12 @@ left: 5%;
 
 .kginfo #modelkg {
   font-size: 2rem;
-} 
+}
+
+#ar-content * {
+  display: none;
+}
+
 @media only screen and (max-width: 600px) {
   #progress {
     font-size: 2em
@@ -619,8 +624,8 @@ left: 5%;
     display: none;
     position: absolute;
     bottom: 20px;
-    left: calc(50% - 50px);
-    width: 100px;
+    left: calc(50% - 75px);
+    width: 120px;
     height: 35px;
   }
 
@@ -628,10 +633,10 @@ left: 5%;
     display: none;
     position: absolute;
     margin: 12px;
-    left: calc(50% - 75px);
+    left: calc(50% - 90px);
     bottom: 75px;
-    width: 125px;
-    height: 5px;
+    width: 150px;
+    height: 7px;
     border-radius: 5px; 
     background: grey;
     outline: none;
@@ -670,6 +675,19 @@ left: 5%;
     font-size: 1.6rem;
     font-weight: 700;
     color: whitesmoke;
+  }
+
+  #ar-content #ar-remove {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    left: calc(50% + 50px);
+    width: 30px;
+    height: 35px;
+  }
+
+  #ar-content #ar-remove:active, #ar-content #ar-place:active {
+    transform: translateY(1.5px);
   }
 }
 
