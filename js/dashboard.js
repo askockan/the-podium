@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
             userDisplayName.innerHTML = "Signed in as: " + user.displayName;
-            userEmail.innerHTML = user.email;
+            /* userEmail.innerHTML = user.email; */
             UIForSignIn();
             fetchUserModels();
         } else {

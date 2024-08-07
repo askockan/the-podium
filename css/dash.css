@@ -122,3 +122,59 @@ body {
   font-size: 1.3rem;
   color: whitesmoke;
 }
+
+@media only screen and (max-width: 600px) {
+  #dashboard {
+    margin-left: 120px;
+    padding-left: 20px;
+  }
+  
+  .sidenav {
+    height: 100%;
+    width: 125px;
+  }
+  
+  .sidenav h3 {
+    padding: 12px;
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+  
+  .sidenav a {
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 16px;
+  }
+    
+  .sidenav #refreshBtn {
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 16px;
+    width: 100px;
+  }
+  
+  .sidenav #google-sign-in, .sidenav #sign-out {
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 16px;
+    width: 200px;
+  }
+  
+  .sidenav .userinfo {
+    color: white;
+    padding: 0px;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  
+  .card {
+    margin: 10px;
+    padding: 10px;
+    width: 250px;
+    height: 200px;
+  }
+  
+  .card h3 {
+    font-size: 1.3rem;
+  }
+}
