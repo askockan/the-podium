@@ -6,7 +6,7 @@
 }
 
 body {
-  background: linear-gradient(135deg, #146377, #154C84);
+  background: linear-gradient(135deg, white, whitesmoke);
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -111,8 +111,10 @@ body {
   padding: 10px;
   width: 250px;
   height: 200px;
+  background-color: whitesmoke;
   text-align: center;
   display: flex;
+  position: relative;
   flex-direction: column-reverse;
   align-items: center;
   justify-content: center;
@@ -120,7 +122,28 @@ body {
 
 .card h3 {
   font-size: 1.3rem;
-  color: whitesmoke;
+  color: darkgrey;
+}
+
+.card button {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  background: none;
+  left: 85.5%;
+  top: 82%;
+  border: outset 2px white;
+  transition: .2s;
+}
+
+.card button:hover {
+  cursor: pointer;
+  background-color: darkgrey;
+}
+
+.card button:active {
+  border: inset 2px white;
+  transform: translateY(1.5px);
 }
 
 @media only screen and (max-width: 600px) {

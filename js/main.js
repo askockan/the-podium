@@ -377,6 +377,8 @@ export function userModelLoader(fileUrl) {
         xAxisSlider.value = xAxisSlider.defaultValue;
         yAxisSlider.value = yAxisSlider.defaultValue;
 
+        console.log(display_model.scale);
+        console.log(display_model.scale);
         scene.add(display_model);
 
         carinfo.style.display = 'none';

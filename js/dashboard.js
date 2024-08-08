@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as authSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable, listAll } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
+import { getFirestore} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+import { getStorage, ref, getDownloadURL, listAll, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     const dashboard = document.getElementById('dashboard');
@@ -123,8 +123,28 @@ document.addEventListener('DOMContentLoaded', function() {
         const preview = document.createElement('img');
         preview.src = data.url;
 
+        const delBtn = document.createElement('button');
+        delBtn.innerText = "🗑️";
+        delBtn.addEventListener('click', async () => {
+            const user = auth.currentUser;
+            if (user) {
+                const userUID = user.uid;
+                const deleteFolderRef = ref(storage, `${userUID}/${data.name}`);
+                try {
+                    await deleteObject(deleteFolderRef);
+                    alert("File deleted succesfully.");
+                    fetchUserModels();
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                alert("You need to sign in to delete your models.");
+            }
+        });
+
         card.appendChild(title);
         card.appendChild(preview);
+        card.appendChild(delBtn);
         dashboard.appendChild(card);
     }
 
