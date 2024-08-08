@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as authSignOut, onAuthStateChanged, signInWithRedirect } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as authSignOut, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+import { getFirestore} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 import { userModelLoader } from './main.js';
 
 const firebaseConfig = {
@@ -22,10 +22,11 @@ const storage = getStorage(app);
 
 const googleSignIn = document.getElementById('google-sign-in');
 const googleSignOut = document.getElementById('sign-out');
+const dashboardBtn = document.getElementById('dashboardBtn');
+const buttonSeperator = document.querySelector('.buttonseperator');
 const userUploadBtn = document.getElementById('userUpload');
 const modelUploadBtn = document.getElementById('modelUpload');
 const modelSaveBtn = document.getElementById('modelSave');
-const dashboardBtn = document.getElementById('dashboardBtn');
 const cModelName = document.getElementById('cModelName');
 
 googleSignIn.addEventListener('click', signIn);
@@ -76,6 +77,7 @@ function UIForSignIn() {
     googleSignOut.style.display = 'block';
     googleSignIn.style.display = 'none';
     dashboardBtn.style.display = 'block';
+    buttonSeperator.style.display = 'block';
 }
 
 function UIForSignOut() {
@@ -83,6 +85,7 @@ function UIForSignOut() {
     googleSignOut.style.display = 'none';
     googleSignIn.style.display = 'block';
     dashboardBtn.style.display = 'none';
+    buttonSeperator.style.display = 'none';
 }
 
 function enableButtons() {
@@ -117,6 +120,7 @@ function uploadModel() {
             const file = userUploadBtn.files[0]
             if (file) {
                 const fileUrl = URL.createObjectURL(file);
+                console.log(fileUrl);
                 userModelLoader(fileUrl);
             } else {
                 alert("Please select a model first.");
@@ -179,3 +183,23 @@ async function saveModel() {
         }
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const model = urlParams.get('model')
+    if (model) {
+        onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userUID = user.uid
+            const loadFolderPath = ref(storage, `${userUID}/${model}`)
+            const url = await getDownloadURL(loadFolderPath);
+            userModelLoader(url);
+        } else {
+            alert("You need to Sign in to view your model.");
+            window.location.href = 'index.html';
+        }
+    });
+    } else {
+        return;
+    }
+})

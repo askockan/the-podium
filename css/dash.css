@@ -126,24 +126,33 @@ body {
 }
 
 .card button {
+  position: absolute;
   width: 30px;
   height: 30px;
-  position: absolute;
   background: none;
-  left: 85.5%;
-  top: 82%;
+  background-color: white;
   border: outset 2px white;
   transition: .2s;
+  top: 82%;
+}
+
+.card #loadBtn {
+  left: 2%;
+}
+
+.card #delBtn {
+  left: 85.5%;
 }
 
 .card button:hover {
   cursor: pointer;
-  background-color: darkgrey;
+  background-color: grey;
 }
 
+
 .card button:active {
-  border: inset 2px white;
   transform: translateY(1.5px);
+  border: inset 2px white;
 }
 
 @media only screen and (max-width: 600px) {
@@ -173,7 +182,7 @@ body {
     font-size: 1.2rem;
     font-weight: 600;
     padding: 16px;
-    width: 100px;
+    width: 163px;
   }
   
   .sidenav #google-sign-in, .sidenav #sign-out {

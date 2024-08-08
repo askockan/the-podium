@@ -1,14 +1,14 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: monospace;
+  font-family: "Poppins", "Roboto", monospace;
   box-sizing: border-box;
 }
 
 body {
   margin: 0px;
   overflow: hidden;
-  background: linear-gradient(to top, #c31432, #240b36);
+  background: linear-gradient(to top, white, darkgrey);
 }
 
 #navbutton {
@@ -71,7 +71,8 @@ body {
 .sidenav h1 {
   text-align: center;
   padding: 10px;
-  font-weight: 700;
+  font-weight: 550;
+  font-size: 1.6rem;
   border: 5px outset black;
 }
 
@@ -114,18 +115,33 @@ body {
 #heading {
   position: fixed;
   width: 100%;
-  margin-top: 1rem;
-  color: #c31432;
+  padding: 12px;
+  color: white;
+  background-color: grey;
 }
 
 #heading h1 {
   margin-top: 1rem;
-  text-align: center;
-  font-size: 2.2rem;
+  text-align: left;
+  font-size: 2rem;
   color: inherit;
   display: block;
-  margin: 0px;
-  font-weight: bold;
+  width: fit-content;
+  height: fit-content;
+  margin: 0;
+  margin-left: 12px;
+  font-weight: 500;
+}
+
+#heading h1 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #login-ui {
@@ -136,105 +152,69 @@ body {
   top: 8%;
   margin-left: 5px;
 }
-
-#login-ui #google-sign-in {
-  cursor: pointer;
-  transition: color .3s, box-shadow .3s, padding .3s;
-      
-  padding: 12px 16px 12px 42px;
-  border: none;
-  border-radius: 3px;
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
-  
-  color: #757575;
-  font-size: 14px;
-  font-weight: 700;
-  
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTcuNiA5LjJsLS4xLTEuOEg5djMuNGg0LjhDMTMuNiAxMiAxMyAxMyAxMiAxMy42djIuMmgzYTguOCA4LjggMCAwIDAgMi42LTYuNnoiIGZpbGw9IiM0Mjg1RjQiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Ik05IDE4YzIuNCAwIDQuNS0uOCA2LTIuMmwtMy0yLjJhNS40IDUuNCAwIDAgMS04LTIuOUgxVjEzYTkgOSAwIDAgMCA4IDV6IiBmaWxsPSIjMzRBODUzIiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNNCAxMC43YTUuNCA1LjQgMCAwIDEgMC0zLjRWNUgxYTkgOSAwIDAgMCAwIDhsMy0yLjN6IiBmaWxsPSIjRkJCQzA1IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNOSAzLjZjMS4zIDAgMi41LjQgMy40IDEuM0wxNSAyLjNBOSA5IDAgMCAwIDEgNWwzIDIuNGE1LjQgNS40IDAgMCAxIDUtMy43eiIgZmlsbD0iI0VBNDMzNSIgZmlsbC1ydWxlPSJub256ZXJvIi8+PHBhdGggZD0iTTAgMGgxOHYxOEgweiIvPjwvZz48L3N2Zz4=);
-  background-color: white;
-  background-repeat: no-repeat;
-  background-position: 12px 11px;
+.buttonseperator {
+  display: none;
 }
 
-#login-ui #sign-out {
+#top-login #google-sign-in {
   cursor: pointer;
-  transition: color .3s, padding .3s, box-shadow .3s;
-      
-  padding: 12px 16px 12px 42px;
+  transition: color .3s;
+  background: none;
+  outline: none;
   border: none;
-  border-radius: 3px;
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
-  
-  color: #757575;
-  font-size: 14px;
-  font-weight: 700;
-  
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTcuNiA5LjJsLS4xLTEuOEg5djMuNGg0LjhDMTMuNiAxMiAxMyAxMyAxMiAxMy42djIuMmgzYTguOCA4LjggMCAwIDAgMi42LTYuNnoiIGZpbGw9IiM0Mjg1RjQiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Ik05IDE4YzIuNCAwIDQuNS0uOCA2LTIuMmwtMy0yLjJhNS40IDUuNCAwIDAgMS04LTIuOUgxVjEzYTkgOSAwIDAgMCA4IDV6IiBmaWxsPSIjMzRBODUzIiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNNCAxMC43YTUuNCA1LjQgMCAwIDEgMC0zLjRWNUgxYTkgOSAwIDAgMCAwIDhsMy0yLjN6IiBmaWxsPSIjRkJCQzA1IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNOSAzLjZjMS4zIDAgMi41LjQgMy40IDEuM0wxNSAyLjNBOSA5IDAgMCAwIDEgNWwzIDIuNGE1LjQgNS40IDAgMCAxIDUtMy43eiIgZmlsbD0iI0VBNDMzNSIgZmlsbC1ydWxlPSJub256ZXJvIi8+PHBhdGggZD0iTTAgMGgxOHYxOEgweiIvPjwvZz48L3N2Zz4=);
-  background-color: white;
-  background-repeat: no-repeat;
-  background-position: 12px 11px;
+  color: whitesmoke;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
-#login-ui #top-login #dashboardBtn {
+#top-login #sign-out {
   cursor: pointer;
-  transition: color .3s, padding .3s, box-shadow .3s;
-      
-  padding: 12px 16px 12px 21px;
+  transition: color .3s;
+  background: none;
+  outline: none;
   border: none;
-  border-radius: 3px;
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
-  
-  color: #757575;
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: none;
-  
-  background: white; 
-  margin-left: 5px;
+  color: whitesmoke;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-right: 4px;
 }
 
-#login-ui #top-login {
-  margin-bottom: 20px;
+#top-login #dashboardBtn {
+  cursor: pointer;
+  transition: color .3s;
+  background: none;
+  outline: none;
+  border: none;
+  color: whitesmoke;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+#heading .headbuttons #top-login {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
-#login-ui #sign-out:hover {
-  padding: 12px 16px 12px 48px;
+#top-login #sign-out:hover {
   color: black;
 }
 
-#login-ui #google-sign-in:hover {
-  padding: 12px 16px 12px 48px;
+#top-login #google-sign-in:hover {
   color: black;
 }
 
-#login-ui #top-login #dashboardBtn:hover {
-  padding: 12px 16px 12px 27px;
+#top-login #dashboardBtn:hover {
   color: black;
-}
-
-#login-ui #sign-out:focus {
-  box-shadow: 
-  0 -1px 0 rgba(0, 0, 0, .04),
-  0 2px 4px rgba(0, 0, 0, .25),
-  0 0 0 3px #c8dafc;
-}
-
-#login-ui #google-sign-in:focus {
-  box-shadow: 
-  0 -1px 0 rgba(0, 0, 0, .04),
-  0 2px 4px rgba(0, 0, 0, .25),
-  0 0 0 3px #c8dafc;
 }
 
 #login-ui button, #login-ui input, #login-ui label{
   display: inline-block;
   border: 3px outset black;
   color: black;
-  font-weight: bold;
-  font-size: 1.1rem;
+  font-weight: 500;
+  font-size: 1rem;
   background: linear-gradient(to top, whitesmoke, grey);
   padding: 2px;
   margin: 1.5px 5px;
@@ -249,15 +229,16 @@ body {
   border: 3px inset black;
 } 
 
-#carinfo {
+#modelinfo {
   position: fixed;
-  color: #c31432;
-  font-weight: bold;
-  font-size: 1.5rem;
-  bottom: 70%;
+  color: white;
+  font-weight: 500;
+  font-size: 1.4rem;
+  bottom: 86.5%;
   border: 5px outset;
-  border-color: #c31432;
-  right: 2%;
+  border-color: darkgrey;
+  background: linear-gradient(to top, darkgrey, grey);
+  right: 0%;
   padding: 4px;
 }
 
@@ -298,169 +279,27 @@ body {
   color: whitesmoke;
 }
 
-#web-ui #modelsize{
-  position: absolute;
-  font-size: 1.5rem;
-  color: inherit;
-  text-transform: uppercase;
-  left: 22%;
-}
-
-#web-ui #horizontal {
-  position: absolute;
-  font-size: 1.5rem;
-  color: inherit;
-  text-transform: uppercase;
-  left: 22%;
-}
-
-#web-ui #vertical {
-  position: absolute;
-  font-size: 1.5rem;
-  color: inherit;
-  text-transform: uppercase;
-  left: 27%;
-}
-
-#model-slider {
-position: relative;
-margin: 16px 25px;
-width: 150px;
-height: 5px;
-border-radius: 5px; 
-background: grey;
-outline: none;
-opacity: 0.7;
--webkit-transition: .2s;
-transition: opacity .2s;
-}
-
-#model-slider:hover {
-opacity: 1;
-}
-
-#model-slider::-webkit-slider-thumb {
--webkit-appearance: none;
-appearance: none;
-width: 25px;
-height: 25px;
-border-radius: 50%;
-background: black;
-cursor: pointer;
-}
-
-#model-slider::-moz-range-thumb {
-width: 25px;
-height: 25px;
-border-radius: 50%;
-background: black;
-cursor: pointer;
-}
-
-#x-slider {
-  position: relative;
-  margin: 16px 25px;
-  width: 150px;
-  height: 5px;
-  border-radius: 5px; 
-  background: grey;
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-}
-
 #reset {
-  position: relative;
-  margin-left: 25px;
-  width: 150px;
+  position: fixed;
+  width: 125px;
   height: 30px;
-  background: grey;
+  bottom: 83%;
+  right: 0%;
+  background: linear-gradient(to top, darkgrey, grey);
   outline: none;
   border-radius: 5px;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   text-transform: uppercase;
   color: whitesmoke;
-  transition: background .3s;
 }
 
 #reset:hover {
-  background: darkgrey;
+  background: linear-gradient(to top, grey, darkgrey);
   cursor: pointer;
 }
 
 #reset:active {
   transform: translateY(3px);
-}
-
-#y-slider {
-  position: relative;
-  margin: 16px 25px;
-  width: 150px;
-  height: 5px;
-  border-radius: 5px; 
-  background: grey;
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-}
-  
-#x-slider:hover, #y-slider:hover {
-  opacity: 1;
-}
-  
-#x-slider::-webkit-slider-thumb, #y-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: black;
-  cursor: pointer;
-}
-  
-#x-slider::-moz-range-thumb, #y-slider::-moz-range-thumb {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: black;
-  cursor: pointer;
-}
-
-.x-slider, .y-slider, .size-slider, .resetBtn {
-  display: flex;
-  align-items: center;
-  margin-top: 8px;
-}
-
-.x-slider #in-x, .y-slider #in-y, .size-slider #in {
-position: absolute;
-color: inherit;
-font-size: 1.5rem;
-left: 90%;
-}
-
-.x-slider #out-x, .y-slider #out-y, .size-slider #out {
-position: absolute;
-color: inherit;
-font-size: 1.5rem;
-left: 5%;
-}
-
-.kginfo {
-  display: flex;
-  color: inherit;
-  flex-direction: column;
-  align-items: center;
-}
-
-.kginfo #kg {
-  font-size: 1.5rem;
-}
-
-.kginfo #modelkg {
-  font-size: 2rem;
 }
 
 #ar-content * {
@@ -482,62 +321,40 @@ left: 5%;
     color: whitesmoke;
   }
 
-  #web-ui #modelsize, #web-ui #horizontal, #web-ui #vertical {
-    font-size: 1.2rem;
-  }
-
   #heading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    position: fixed;
+    width: 100%;
+    padding: 8px;
+    color: white;
+    background-color: grey;
   }
 
-  #carinfo {
-    position: relative;
-    top:0px;
-    left:0px;
-    font-size: 1.1em;
-    border: 5px outset #c31432;
-    height: 35px;
+  #heading h1 {
+    margin-top: 1rem;
+    text-align: left;
+    font-size: 1.4rem;
+    color: inherit;
+    display: block;
     width: fit-content;
-    padding: 4px 4px 4px 7px;
+    height: fit-content;
+    margin: 0;
+    margin-left: 5px;
+    font-weight: 550;
   }
 
-  #model-slider, #x-slider, #y-slider {
-    width: 100px;
+  #modelinfo {
+    position: fixed;
+    color: white;
+    font-weight: 500;
+    font-size: 0.8rem;
+    bottom: 85%;
+    border: 5px outset;
+    border-color: darkgrey;
+    background: linear-gradient(to top, darkgrey, grey);
+    right: 0%;
+    padding: 4px;
   }
 
-  #model-slider::-webkit-slider-thumb, #x-slider::-webkit-slider-thumb, #y-slider::-webkit-slider-thumb {
-    width: 15px;
-    height: 15px;
-  }
-
-  #model-slider::-moz-range-thumb, #x-slider::-moz-range-thumb, #y-slider::-moz-range-thumb{
-    width: 15px;
-    height: 15px;
-  }
-  
-  .size-slider, .x-slider, .y-slider {
-    width: 150px;
-  }
-
-  .size-slider #in, .x-slider #in-x, .y-slider #in-y {
-  font-size: 1rem;
-  }
-
-  .size-slider #out, .x-slider #out-x, .y-slider #out-y {
-    font-size: 1rem;
-    margin-left: 5px; 
-  }
-  
-  .kginfo #kg {
-    font-size: 1.1rem;
-  }
-  
-  .kginfo #modelkg {
-    font-size: 1.7rem;
-  }
-  
   #navbutton {
     top: 36%;
     padding: 1px;
@@ -558,7 +375,7 @@ left: 5%;
   .sidenav h1 {
     text-align: center;
     padding: 10px;
-    font-weight: 700;
+    font-weight: 500;
     border: 5px outset black;
   }
   
@@ -583,21 +400,22 @@ left: 5%;
   }
   
   #login-ui {
-    top: 8.5%;
-    right: 32.5%;
-    transform: scale(60%);
+    top: 4%;
+    right: 81%;
+    transform: scale(65%);
   }
   
   #login-ui button{
     display: inline-block;
     border: 3px outset black;
     color: black;
-    font-weight: bold;
+    font-weight: 500;
     font-size: 1.1rem;
     background: linear-gradient(to top, whitesmoke, grey);
     padding: 2px;
     margin: 1.5px 5px;
     transition: .3s ease;
+    width: 160%;
   }
   
   #login-ui button:hover {
@@ -607,12 +425,18 @@ left: 5%;
     cursor: pointer;
     border: 3px inset black;
   }
+
+  #login-ui input, #login-ui label {
+    width: 275%;
+  }
   
   #reset {
-    margin-left: 5px;
     width: 100px;
-    height: 20px;
-    font-size: 1.2rem;
+    height: 25px;
+    bottom: 81%;
+    right: 0%;
+    border-radius: 5px;
+    font-size: 1.1rem;
   }
   
   #reset:active {
@@ -673,7 +497,7 @@ left: 5%;
     left: calc(50% - 25px);
     bottom: 115px;
     font-size: 1.6rem;
-    font-weight: 700;
+    font-weight: 500;
     color: whitesmoke;
   }
 

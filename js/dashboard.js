@@ -123,7 +123,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const preview = document.createElement('img');
         preview.src = data.url;
 
+        const loadBtn = document.createElement('button')
+        loadBtn.id = 'loadBtn';
+        loadBtn.innerText = "👁️";
+        loadBtn.addEventListener('click', () => {
+            const user = auth.currentUser;
+            if (user) {
+                const userUID = user.uid;
+                const loadFolderName = data.name;
+                window.location.href = `index.html?model=${loadFolderName}`;
+            } else {
+                alert("You need to sign in to view your models.");
+            }
+        })
+        
         const delBtn = document.createElement('button');
+        delBtn.id = 'delBtn';
         delBtn.innerText = "🗑️";
         delBtn.addEventListener('click', async () => {
             const user = auth.currentUser;
@@ -144,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         card.appendChild(title);
         card.appendChild(preview);
+        card.appendChild(loadBtn);
         card.appendChild(delBtn);
         dashboard.appendChild(card);
     }

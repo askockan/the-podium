@@ -3,19 +3,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ARButton } from 'three/addons/webxr/ARButton.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-const header = document.getElementById('heading');
-const modelSlider = document.getElementById('model-slider');
-const kgInfo = document.querySelector('.kginfo');
-const modelKg = document.getElementById('modelkg');
 const navbutton = document.getElementById('navbutton');
 const sidenav = document.getElementById('sidenav');
 const sideNavCSS = window.getComputedStyle(sidenav, null);
-const carinfo = document.getElementById('carinfo');
+const modelinfo = document.getElementById('modelinfo');
 const progress = document.getElementById('progress');
 const loadInfo = document.getElementById('load-info');
-const xAxisSlider = document.getElementById('x-slider');
-const yAxisSlider = document.getElementById('y-slider');
-const sliderResetBtn = document.getElementById('reset');
+const resetBtn = document.getElementById('reset');
 
 //
 const arPlaceBtn = document.getElementById('ar-place');
@@ -95,7 +89,7 @@ arScaleSlider.addEventListener('input', (e) => {
 })
 
 function init() {
-
+    // Model Menu
     navbutton.addEventListener('click', () => {
         let sideNavMarginL = sideNavCSS.getPropertyValue('margin-left');
         if (sideNavMarginL == '-215px') {
@@ -106,96 +100,39 @@ function init() {
             navbutton.classList.toggle('active');
         }
     })
-    
-    //
-    // TO-DO: works fine on slow slide, problem with clicks on slider.
-    let lastVal = modelSlider.defaultValue;
-    modelSlider.addEventListener('input', (e) => {
-        if (display_model) {
-            if (lastVal) {
-                if(lastVal > e.target.value) {
-                    if(display_model.scale.getComponent(0) > 0.1 || display_model.scale.getComponent(1) > 0.1 || display_model.scale.getComponent(2) > 0.1 ) {
-                        display_model.scale.addScalar(-0.1);
-                    } else {
-                        lastVal = e.target.value;
-                        return;
-                    } 
-                } else {
-                    display_model.scale.addScalar(0.1);
-                }
-                lastVal = e.target.value;
-            }
-
-            let currentKg = 533*e.target.value
-            modelKg.innerHTML = Math.round(currentKg) + " " + "KG";
-        }
-    });
-
-    xAxisSlider.addEventListener('input', (e) => {
-        if (display_model) {
-            if (e.target.value) {
-                display_model.position.setX(e.target.value - 2);
-            }
-        }
-    });
-
-    yAxisSlider.addEventListener('input', (e) => {
-        if (display_model) {
-            if (e.target.value) {
-                display_model.position.setY(e.target.value - 2);
-            }
-        }
-    });
-    
+    // Reset Controls
     function resetModel() {
         controls.reset();
-        let x = modelSlider.value - modelSlider.defaultValue;
-        const roundedX = Math.floor(x * 100) / 100;
-        display_model.scale.set(modelSlider.value - roundedX, modelSlider.value - roundedX, modelSlider.value - roundedX);
-        display_model.position.setY(0);
-        display_model.position.setX(0);
-        modelSlider.value = modelSlider.defaultValue;
-        lastVal = modelSlider.defaultValue;
-        xAxisSlider.value = xAxisSlider.defaultValue;
-        yAxisSlider.value = yAxisSlider.defaultValue;
-        let displayKG = Math.round(533 * modelSlider.defaultValue);
-        modelKg.innerHTML = `${displayKG} KG`;   
     }
     
-    sliderResetBtn.addEventListener('click', () => {
+    resetBtn.addEventListener('click', () => {
         resetModel();
     })
 
-    //
+    // Scene HTML
 
     container = document.createElement( 'div' );
     document.getElementById('model').appendChild( container );
 
-    //
+    // Scene and Camera
 
     scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-    //
-
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 5, 11);
-
-    //
-
-
-    // TO-DO: make this optional with button smt..
-    /* const spotLight = new THREE.SpotLight(0xffffff, 2000, 100, 0.22, 1);
+    // Lights
+    // TO-DO: add sliders to modify lightning based on VALUE not input
+    const spotLight = new THREE.SpotLight(0xffffff, 2000, 100, 0.22, 1);
     spotLight.position.set(0, 15, 0);
     spotLight.castShadow = true;
     spotLight.shadow.bias = -0.0001;
-    scene.add(spotLight); */
+    scene.add(spotLight);
 
     const ambientLight = new THREE.AmbientLight(0x404040, 100);
     ambientLight.position.set(1, 1, 0);
     /* spotLight.castShadow = false; */
     scene.add(ambientLight);
 
-    //
+    // three.js Renderer
 
     renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -204,20 +141,15 @@ function init() {
     renderer.xr.enabled = true;
     container.appendChild( renderer.domElement );
 
-    //
+    // Scene Orbit Controls
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.1;
-    controls.enablePan = false;
-    controls.minDistance = 3;
-    controls.maxDistance = 20;
+    controls.enablePan = true;
     controls.autoRotate = false;
-    controls.target = new THREE.Vector3(0, 1, 0);
-    controls.saveState();
-    controls.update();
     
-    //
+    // AR Setup
 
     let options = {
         requiredFeatures: ['hit-test'],
@@ -227,16 +159,18 @@ function init() {
     options.domOverlay = {root: document.getElementById("ar-content")};
     document.body.appendChild( ARButton.createButton(renderer, options));
     
-    //
+    // Pre-Uploaded Models
 
-    rb19.addEventListener("click", () => modelLoader('rb19', 'Oracle Red Bull F1 RB19 ', 2, 2.7, 1.5, 'linear-gradient(to top, #F59631, #1E41A0)', '#F59631'));
-    sf23.addEventListener("click", () => modelLoader('sf23', 'Scuderia Ferrari F1 SF23 ', 1.5, 2.2, 1, 'linear-gradient(to top, #c31432, #240b36)', '#c31432'));
-    artest.addEventListener("click", () => modelLoader('artest', 'AR Test Model ', 1, "" , "", 'linear-gradient(to top, #636363, #a2ab58)', '#636363'))
+    rb19.addEventListener("click", () => modelLoader('rb19', 'Oracle Red Bull F1 RB19 '));
+    sf23.addEventListener("click", () => modelLoader('sf23', 'Scuderia Ferrari F1 SF23 '));
+    artest.addEventListener("click", () => modelLoader('artest', 'AR Test Model '));
 
-
-    //default
-    loader = new GLTFLoader().setPath('models/sf23/');
-    loader.load('sf23.glb', (gltf) => {
+    // Default Model and Check For Params
+    const urlParams = new URLSearchParams(window.location.search);
+    const model = urlParams.get('model')
+    if (!model) {
+        loader = new GLTFLoader().setPath('models/sf23/');
+        loader.load('sf23.glb', (gltf) => {
         display_model = gltf.scene;
         display_model.traverse((child) => {
             if (child.isMesh) {
@@ -245,8 +179,29 @@ function init() {
             }
         });
 
-        display_model.position.set(0, 0, 0);
-        display_model.scale.set(1.5, 1.5, 1.5);
+        display_model.updateMatrixWorld();
+
+        const box = new THREE.Box3().setFromObject(display_model);
+		const size = box.getSize(new THREE.Vector3()).length();
+		const center = box.getCenter(new THREE.Vector3());
+
+        display_model.position.x -= center.x;
+        display_model.position.y -= center.y;
+		display_model.position.z -= center.z;
+        controls.maxDistance = size * 10;
+		camera.near = size / 100;
+		camera.far = size * 100;
+        camera.updateProjectionMatrix();
+		
+        camera.position.copy(center);
+        camera.position.x += size / 1.6;
+        camera.position.y += size / 6.0;
+        camera.position.z += size / 1.6;
+        camera.lookAt(center);
+        controls.target = center;
+        controls.saveState();
+        controls.update();
+        
         scene.add(display_model);
 
         progress.style.display = 'none';
@@ -257,8 +212,9 @@ function init() {
     }, (error) => {
         console.error(error);
     });
+    }
 
-    //
+    // AR Controller
 
     controller = renderer.xr.getController( 0 );
     controller.addEventListener('select', anchor);
@@ -272,7 +228,7 @@ function init() {
     reticle.visible = false;
     scene.add( reticle );
 
-    //
+    // Resize Listener
 
     window.addEventListener( 'resize', onWindowResize );
 }
@@ -286,7 +242,7 @@ function onWindowResize() {
 
 }
 
-//
+// Web - AR Scene Render Function
 
 function animate( timestamp, frame ) {
     if ( frame ) {
@@ -339,49 +295,53 @@ function animate( timestamp, frame ) {
     renderer.render( scene, camera );
 }
 
+// User Model Loader
 export function userModelLoader(fileUrl) {
     progress.style.display = 'flex';
     loadInfo.style.display = 'flex';
-    kgInfo.style.display = 'none';
     scene.remove(display_model);
     loader = new GLTFLoader();
     loader.load(fileUrl, (gltf) => {
         display_model = gltf.scene;
 
-        //TO-DO: problem with 'multiplyScalar' method, search fix
-        /* let model = display_model;
-        let bbox = new THREE.Box3().setFromObject(model);
-        let center = bbox.getCenter(new THREE.Vector3());
-        let size = bbox.getSize(new THREE.Vector3());
+        display_model.updateMatrixWorld();
 
-        let maxAxis = Math.max(size.x, size.y, size.z);
-        model.scale.multiplyScalar(2 / maxAxis);
-        bbox.setFromObject(model);
-        bbox.getCenter(center);
-        bbox.getSize(size);
+        const box = new THREE.Box3().setFromObject(display_model);
+		const size = box.getSize(new THREE.Vector3()).length();
+		const center = box.getCenter(new THREE.Vector3());
 
-        model.position.copy(center).multiplyScalar(-1); 
-        display_model.position.y = 0; */
+        display_model.position.x -= center.x;
+        display_model.position.y -= center.y;
+		display_model.position.z -= center.z;
+        controls.maxDistance = size * 10;
+		camera.near = size / 100;
+		camera.far = size * 100;
+        camera.updateProjectionMatrix();
+		
+        camera.position.copy(center);
+        camera.position.x += size / 1.6;
+        camera.position.y += size / 6.0;
+        camera.position.z += size / 1.6;
+        camera.lookAt(center);
+        controls.target = center;
+        controls.saveState();
+        controls.update();
 
+        let renderOrder = 1;
         display_model.traverse((child) => {
             if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
             }
+            child.renderOrder = renderOrder;
+                renderOrder++;
         });
 
         URL.revokeObjectURL(fileUrl);
 
-        modelSlider.value = 1;
-        modelSlider.defaultValue = modelSlider.value;
-        xAxisSlider.value = xAxisSlider.defaultValue;
-        yAxisSlider.value = yAxisSlider.defaultValue;
-
-        console.log(display_model.scale);
-        console.log(display_model.scale);
         scene.add(display_model);
 
-        carinfo.style.display = 'none';
+        modelinfo.style.display = 'none';
         progress.style.display = 'none';
         loadInfo.style.display = 'none';
     }, (xhr) => {
@@ -392,23 +352,13 @@ export function userModelLoader(fileUrl) {
     });
 }
 
-function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgColor, textColor) {
+// Pre-Uploaded Model Loader
+function modelLoader(modelName, modelinfoText) {
     scene.remove(display_model);
     progress.style.display = 'flex';
     loadInfo.style.display = 'flex';
-    kgInfo.style.display = 'flex';
-    carinfo.style.display = 'block';
-    carinfo.innerHTML = carInfoText;
-    document.body.style.background = bgColor;
-    carinfo.style.color = textColor;
-    carinfo.style.borderColor = textColor;
-    header.style.color = textColor;
-    modelSlider.value = baseScale;
-    modelSlider.defaultValue = modelSlider.value;
-    xAxisSlider.value = xAxisSlider.defaultValue;
-    yAxisSlider.value = yAxisSlider.defaultValue;
-    let displayKG = Math.round(533 * `${baseScale}`);
-    modelKg.innerHTML = `${displayKG} KG`;
+    modelinfo.style.display = 'block';
+    modelinfo.innerHTML = modelinfoText;
     sidenav.style.marginLeft = '-215px';
     navbutton.classList.toggle('active');
 
@@ -425,8 +375,29 @@ function modelLoader(modelName, carInfoText, baseScale, maxScale, minScale, bgCo
                 renderOrder++;
         });
 
-        display_model.position.set(0, 0, 0);
-        display_model.scale.set(baseScale, baseScale, baseScale);
+        display_model.updateMatrixWorld();
+
+        const box = new THREE.Box3().setFromObject(display_model);
+		const size = box.getSize(new THREE.Vector3()).length();
+		const center = box.getCenter(new THREE.Vector3());
+
+        display_model.position.x -= center.x;
+        display_model.position.y -= center.y;
+		display_model.position.z -= center.z;
+        controls.maxDistance = size * 10;
+		camera.near = size / 100;
+		camera.far = size * 100;
+        camera.updateProjectionMatrix();
+		
+        camera.position.copy(center);
+        camera.position.x += size / 1.6;
+        camera.position.y += size / 6.0;
+        camera.position.z += size / 1.6;
+        camera.lookAt(center);
+        controls.target = center;
+        controls.saveState();
+        controls.update();
+
         scene.add(display_model);
 
         progress.style.display = 'none';
