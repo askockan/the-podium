@@ -24,9 +24,9 @@ const artest = document.getElementById('artest');
 
 let container;
 let camera, scene, renderer;
-let loader;
+let loader, previewLoader;
 let controller, controls;
-let display_model;
+let display_model, preview_model;
 
 let reticle;
 
@@ -36,10 +36,23 @@ let hitTestSourceRequested = false;
 init();
 animate();
 
-document.getElementById("ARButton").addEventListener('click', () => {
-    display_model.visible = false;
-    display_model.scale.set(0.25, 0.25, 0.25);
-})
+document.getElementById("ARButton").addEventListener('click', async () => {
+    if (navigator.xr) {
+        try {
+            let supported = await navigator.xr.isSessionSupported('immersive-ar');
+            if (supported) {
+            display_model.visible = false;
+            display_model.scale.set(0.25, 0.25, 0.25);
+            } else {
+            alert("This device does not support immersive-ar session.");
+            }
+        } catch (error) {
+            alert("Error checking 'immersive-ar' support:", error);
+        }
+    } else {
+        alert("This browser does not support WebXR.");
+    }
+});
 
 function checkIntersections(touchOrigin, directionFromCamera) {
     let raycaster = new THREE.Raycaster();
@@ -295,63 +308,6 @@ function animate( timestamp, frame ) {
     renderer.render( scene, camera );
 }
 
-// User Model Loader
-export function userModelLoader(fileUrl) {
-    progress.style.display = 'flex';
-    loadInfo.style.display = 'flex';
-    scene.remove(display_model);
-    loader = new GLTFLoader();
-    loader.load(fileUrl, (gltf) => {
-        display_model = gltf.scene;
-
-        display_model.updateMatrixWorld();
-
-        const box = new THREE.Box3().setFromObject(display_model);
-		const size = box.getSize(new THREE.Vector3()).length();
-		const center = box.getCenter(new THREE.Vector3());
-
-        display_model.position.x -= center.x;
-        display_model.position.y -= center.y;
-		display_model.position.z -= center.z;
-        controls.maxDistance = size * 10;
-		camera.near = size / 100;
-		camera.far = size * 100;
-        camera.updateProjectionMatrix();
-		
-        camera.position.copy(center);
-        camera.position.x += size / 1.6;
-        camera.position.y += size / 6.0;
-        camera.position.z += size / 1.6;
-        camera.lookAt(center);
-        controls.target = center;
-        controls.saveState();
-        controls.update();
-
-        let renderOrder = 1;
-        display_model.traverse((child) => {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-            child.renderOrder = renderOrder;
-                renderOrder++;
-        });
-
-        URL.revokeObjectURL(fileUrl);
-
-        scene.add(display_model);
-
-        modelinfo.style.display = 'none';
-        progress.style.display = 'none';
-        loadInfo.style.display = 'none';
-    }, (xhr) => {
-        let roundedload = Math.round(`${xhr.loaded / xhr.total * 100}`);
-        loadInfo.innerHTML= `loading ${roundedload}%`;
-    }, (error) => {
-        console.error(error);
-    });
-}
-
 // Pre-Uploaded Model Loader
 function modelLoader(modelName, modelinfoText) {
     scene.remove(display_model);
@@ -409,5 +365,129 @@ function modelLoader(modelName, modelinfoText) {
         loadInfo.innerHTML= `loading ${roundedload}%`;
     }, (error) => {
         console.error(error);
+    });
+}
+
+// User Model Loader
+export function userModelLoader(fileUrl) {
+    progress.style.display = 'flex';
+    loadInfo.style.display = 'flex';
+    scene.remove(display_model);
+    loader = new GLTFLoader();
+    loader.load(fileUrl, (gltf) => {
+        display_model = gltf.scene;
+        
+        display_model.updateMatrixWorld();
+
+        const box = new THREE.Box3().setFromObject(display_model);
+		const size = box.getSize(new THREE.Vector3()).length();
+		const center = box.getCenter(new THREE.Vector3());
+
+        display_model.position.x -= center.x;
+        display_model.position.y -= center.y;
+		display_model.position.z -= center.z;
+        controls.maxDistance = size * 10;
+		camera.near = size / 100;
+		camera.far = size * 100;
+        camera.updateProjectionMatrix();
+		
+        camera.position.copy(center);
+        camera.position.x += size / 1.6;
+        camera.position.y += size / 6.0;
+        camera.position.z += size / 1.6;
+        camera.lookAt(center);
+        controls.target = center;
+        controls.saveState();
+        controls.update();
+
+        let renderOrder = 1;
+        display_model.traverse((child) => {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+            child.renderOrder = renderOrder;
+                renderOrder++;
+        });
+
+        URL.revokeObjectURL(fileUrl);
+
+        scene.add(display_model);
+
+        progress.style.display = 'none';
+        loadInfo.style.display = 'none';
+        const urlParams = new URLSearchParams(window.location.search);
+        const model = urlParams.get('model')
+        if (model) {
+            let modeltext = model.split('.')[0];
+            modeltext = modeltext.charAt(0).toUpperCase() + modeltext.slice(1);
+            modelinfo.innerHTML = modeltext;
+        } else {
+            modelinfo.style.display = 'none';
+        }
+    }, (xhr) => {
+        let roundedload = Math.round(`${xhr.loaded / xhr.total * 100}`);
+        loadInfo.innerHTML= `loading ${roundedload * 100 / 100}%`;
+    }, (error) => {
+        console.error(error);
+    });
+}
+
+// Preview Image Generator
+export async function previewImgCapture(url) {
+    return new Promise((resolve, reject) => {
+        const previewLoader = new GLTFLoader();
+        const previewScene = new THREE.Scene();
+
+        previewLoader.load(url, (gltf) => {
+            preview_model = gltf.scene;
+            preview_model.scale.set(1, 1, 1)
+            const previewCamera = new THREE.PerspectiveCamera(65, 1, 0.1, 1000);
+            
+            const box = new THREE.Box3().setFromObject(preview_model);
+            const size = box.getSize(new THREE.Vector3()).length();
+            const center = box.getCenter(new THREE.Vector3());
+            preview_model.position.x = 0;
+            preview_model.position.y = 0;
+            preview_model.position.z = 0;
+            previewCamera.position.copy(center);
+            previewCamera.position.x += size / 2;
+            previewCamera.position.y += size / 2; 
+            previewCamera.position.z += size / 2;
+            previewCamera.lookAt(center);
+    
+            const canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 128;
+        
+            const previewRenderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            previewRenderer.setSize(canvas.width, canvas.height);
+            const previewLightD = new THREE.DirectionalLight(0xffffff, 1);
+            previewLightD.position.set(5, 5, 5).normalize();
+            const previewLightA = new THREE.AmbientLight(0x404040);
+            previewScene.add(previewLightD);
+            previewScene.add(previewLightA);
+            previewScene.add(preview_model);
+    
+            previewRenderer.render(previewScene, previewCamera);
+            
+            // Create a Data URL for the image
+            /* canvas.toBlob((blob) => {
+                if (blob) {
+                    const imgURL = URL.createObjectURL(blob);
+                    resolve(imgURL);  // Resolve the Promise with the URL
+                } else {
+                    reject("Failed to create image blob");
+                }
+            }, 'image/png'); */
+            const imgURL = canvas.toDataURL('image/png');
+            if (imgURL) {
+                resolve(imgURL);
+            } else {
+                reject("ERR");
+            }
+        }, undefined, undefined, (error) => {
+            reject(error); // Reject the Promise if there's an error loading the GLTF
+        });
     });
 }

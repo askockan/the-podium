@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/fireba
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as authSignOut, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 import { getFirestore} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
-import { userModelLoader } from './main.js';
+import { userModelLoader, previewImgCapture } from './main.js';
 
 const firebaseConfig = {
     apiKey: "AIzaSyA1xIr1P-FI1JINyUFIiWfIlv-RmNEnTaE",
@@ -120,7 +120,6 @@ function uploadModel() {
             const file = userUploadBtn.files[0]
             if (file) {
                 const fileUrl = URL.createObjectURL(file);
-                console.log(fileUrl);
                 userModelLoader(fileUrl);
             } else {
                 alert("Please select a model first.");
@@ -151,20 +150,26 @@ async function saveModel() {
         if (user) {
             const userUID = user.uid;
             let holderforfilename = cModelName.value;
-            const storageRef = ref(storage, `${userUID}/${holderforfilename}.glb`);
-
+            const modelRef = ref(storage, `${userUID}/${holderforfilename}.glb`);
+            const fileUrl = URL.createObjectURL(file);
+            const previewDataURL = await previewImgCapture(fileUrl);
+            const metadata = {
+                customMetadata: {
+                  'preview': `${previewDataURL}`
+                }
+              };
             try {
-                await uploadBytes(storageRef, file);
-                const uploadTask = uploadBytesResumable(storageRef, file);
+                const uploadTask = uploadBytesResumable(modelRef, file, metadata);
 
                 uploadTask.on('state_changed', 
                     (snapshot) => {
                         const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
                         document.getElementById('save-info').style.display = 'block';
-                        document.getElementById('save-info').innerText = 'Upload is ' + progress + '% done';
+                        document.getElementById('save-info').innerHTML = 'Uploading Model ' + progress + '%';
                     }, 
                     (error) => {
                         console.error('Error uploading model:', error);
+                        alert("Error uploading model. Please try again.");
                         document.getElementById('save-info').style.display = 'none';
                     }, 
                     () => {

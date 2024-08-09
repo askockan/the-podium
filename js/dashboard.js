@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as authSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 import { getFirestore} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-import { getStorage, ref, getDownloadURL, listAll, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
+import { getStorage, ref, getDownloadURL, listAll, deleteObject, getMetadata } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     const dashboard = document.getElementById('dashboard');
@@ -100,7 +100,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 dashboard.innerHTML = '';
 
                 for (const item of listResult.items) {
-                    const url = await getDownloadURL(item);
+                    const metadata = await getMetadata(item);
+                    const customMetadata = metadata.customMetadata;
+                    const url = customMetadata.preview
                     const fileName = item.name;
                     
                     displayModelCard({ name: fileName, url: url });
