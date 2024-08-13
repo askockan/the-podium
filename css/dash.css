@@ -2,211 +2,300 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: monospace;
+  font-family: 'PT Sans', sans-serif, monospace;
 }
 
 body {
-  background: linear-gradient(135deg, white, whitesmoke);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: 63px 1fr;
+  transition: .2s;
 }
 
-#dashboard {
+.header {
+  background-color: rgb(16 76 186);;
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
   display: flex;
-  flex-wrap: wrap;
-  margin-left: 200px;
-  padding-left: 20px;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  transition: .2s;
 }
 
-.sidenav {
-  height: 100%;
-  width: 200px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background: linear-gradient(60deg, whitesmoke, 10%, grey); 
-  overflow-x: hidden;
-}
-
-.sidenav h3 {
+.header h3 {
+  padding: 0 24px;
+  font-size: 1.3rem;
+  font-weight: 600;
   color: white;
-  padding: 16px;
-  text-decoration: none;
-  display: block;
-  font-weight: bold;
+  transition: .2s;
+}
+
+.header ion-icon {
+  color: white;
   font-size: 2rem;
-  border-bottom: 7px outset darkgrey;
-  border-left: 6px outset darkgrey;
-  border-right: 6px outset darkgrey;
-  user-select: none;
+  margin-left: 25px;
 }
 
-.sidenav a {
-  color: white;
-  font-size: 1.3rem;
-  font-weight: 600;
-  padding: 16px;
-  text-decoration: none;
-  display: block;
-  transition: .3s ease;
-}
-
-.sidenav a:hover {
-  background-color: #ddd;
-  color: black;
-}
-  
-.sidenav #refreshBtn {
-  color: white;
-  font-size: 1.3rem;
-  font-weight: 600;
-  padding: 16px;
-  text-decoration: none;
-  display: flex;
-  transition: .3s ease;
-  background: none;
-  border: none;
-  width: 200px;
-  text-align: left;
-}
-
-.sidenav #refreshBtn:hover {
-  background-color: #ddd;
-  color: black;
+.header ion-icon:hover {
+  background-color: darkgrey;
+  border-radius: 50px;
   cursor: pointer;
 }
 
-.sidenav #google-sign-in, .sidenav #sign-out {
-  color: white;
-  font-size: 1.3rem;
-  font-weight: 600;
-  padding: 16px;
-  text-decoration: none;
+.navroot {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
   display: flex;
-  transition: .3s ease;
-  background: none;
-  border: none;
-  width: 200px;
-  text-align: left;
+  align-items:center;
+  justify-content: flex-end;
+  transition: .2s;
 }
 
-.sidenav #google-sign-in:hover, .sidenav #sign-out:hover {
-    background-color: #ddd;
-    color: red;
-    cursor: pointer;
+.navroot ion-icon {
+  font-size: 1.5rem;
+  padding: 0 16px;
 }
 
-.sidenav .userinfo {
-  color: white;
-  padding: 6px;
-  font-size: 1.2rem;
-  font-weight: 550;
+.navroot ion-icon:hover {
+  cursor: pointer;
+  background-color: whitesmoke;
+  border-radius: 50px;
+}
+
+.sidenav {
+  background-color: white;
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  border-top: 2px solid whitesmoke;
+  border-right: 2px solid whitesmoke;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+#userInfo {
+  padding: 16px;
+  transition: .2s;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+
+#userInfo span {
+  font-size: 0.9rem;
+}
+
+#userInfo #userName {
+  margin: 0 0 0 10px;
+}
+
+#userInfo ion-icon {
+  font-size: 1.5rem;
+}
+
+#userInfo:hover {
+  background-color: whitesmoke;
+}
+
+.content {
+  background-color: whitesmoke;
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: flex-start;
+  overflow-y: scroll;
+}
+
+.options div {
+  display: flex;
+  padding: 16px;
+  transition: .2s;
+  flex-wrap: nowrap;
+}
+
+.options div a {
+  align-items: center;
+}
+
+#refreshBtn {
+  align-items: center;
+}
+
+.options div:hover {
+  background-color: whitesmoke;
+  cursor: pointer;
+}
+
+.options div ion-icon {
+  font-size: 1.6rem;
+  margin-right: 35px;
+}
+
+.options span {
+  display: flex;
+  align-items: center;
+}
+
+.sidenav a {
+  text-decoration: none;
+  color: black;
 }
 
 .card {
-  border: 2px ridge gray;
-  margin: 10px;
-  padding: 10px;
+  border: 1px solid black;
+  margin: 12px;
+  padding: 20px;
   width: 250px;
   height: 200px;
-  background-color: whitesmoke;
+  background-color: white;
   text-align: center;
   display: flex;
   position: relative;
   flex-direction: column-reverse;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 8px; 
 }
 
 .card h3 {
   font-size: 1.3rem;
-  color: darkgrey;
+  color: black;
 }
 
-.card button {
-  position: absolute;
+#dropdown {
+  position: relative;
+  display: inline-block;
+  right: 51%;
+  top: 3%;
+}
+
+#dropBtn {
   width: 30px;
   height: 30px;
-  background: none;
-  background-color: white;
-  border: outset 2px white;
-  transition: .2s;
-  top: 82%;
+  display: block;
+  position: relative;
+  left: 5%;
+  transition: .3s ease;
 }
 
-.card #loadBtn {
-  left: 2%;
+#dropBtn.active {
+  transform: scaleY(-1);
+  translate: 0 55px;
 }
 
-.card #delBtn {
-  left: 85.5%;
-}
-
-.card button:hover {
+#dropBtn:hover {
   cursor: pointer;
-  background-color: grey;
 }
 
-
-.card button:active {
-  transform: translateY(1.5px);
-  border: inset 2px white;
+#dropdown-content {
+  position: absolute;
+  display: flex;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 2;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  transition: .3s;
+  top: 20%;
 }
 
-@media only screen and (max-width: 600px) {
-  #dashboard {
-    margin-left: 120px;
-    padding-left: 20px;
-  }
-  
-  .sidenav {
-    height: 100%;
-    width: 125px;
-  }
-  
-  .sidenav h3 {
-    padding: 12px;
-    font-weight: bold;
-    font-size: 1.3rem;
-  }
-  
-  .sidenav a {
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: 16px;
-  }
-    
-  .sidenav #refreshBtn {
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: 16px;
-    width: 163px;
-  }
-  
-  .sidenav #google-sign-in, .sidenav #sign-out {
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: 16px;
-    width: 200px;
-  }
-  
-  .sidenav .userinfo {
-    color: white;
-    padding: 0px;
-    font-size: 1.2rem;
-    font-weight: 600;
+#dropdown-content ion-icon {
+  font-size: 1.3rem;
+}
+
+#dropdown-content ion-icon:hover {
+  cursor: pointer;
+}
+
+#dropdown-content.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media only screen and (max-width: 640px) {
+  .content {
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: flex-start;
   }
   
   .card {
-    margin: 10px;
-    padding: 10px;
-    width: 250px;
-    height: 200px;
+    border: 1px solid black;
+    margin: 12px;
+    padding: 20px;
+    width: 125px;
+    height: 100px;
+    background-color: white;
+    text-align: center;
+    display: flex;
+    position: relative;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 8px; 
+  }
+
+  .card h3 {
+    font-size: 1rem;
+    translate: 0 15px;
+  }
+
+  .card img {
+    width: 64px;
+    height: 64px;
+    translate: 0 10px;
+  }
+
+  #dropdown {
+    position: relative;
+    display: inline-block;
+    right: 57%;
+    top: 60%;
   }
   
-  .card h3 {
-    font-size: 1.3rem;
+  #dropBtn {
+    width: 30px;
+    height: 30px;
+    display: block;
+    position: relative;
+    left: 1%;
+    font-size: 1px;
+    transition: .3s ease;
+  }
+  
+  #dropBtn.active {
+    transform: scaleY(-1);
+    translate: 0 45px;
+  }
+  
+  #dropBtn:hover {
+    cursor: pointer;
+  }
+  
+  #dropdown-content {
+    position: absolute;
+    display: flex;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 2;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    transition: .3s;
+    top: 20%;
+  }
+  
+  #dropdown-content ion-icon {
+    font-size: 1rem;
   }
 }

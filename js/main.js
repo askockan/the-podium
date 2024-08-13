@@ -452,8 +452,8 @@ export async function previewImgCapture(url) {
             preview_model.position.z = 0;
             previewCamera.position.copy(center);
             previewCamera.position.x += size / 2;
-            previewCamera.position.y += size / 2; 
-            previewCamera.position.z += size / 2;
+            previewCamera.position.y += size / 2.25; 
+            previewCamera.position.z += size / 1.75;
             previewCamera.lookAt(center);
     
             const canvas = document.createElement('canvas');
@@ -462,24 +462,14 @@ export async function previewImgCapture(url) {
         
             const previewRenderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
             previewRenderer.setSize(canvas.width, canvas.height);
-            const previewLightD = new THREE.DirectionalLight(0xffffff, 1);
+            const previewLightD = new THREE.DirectionalLight(0xffffff, 5);
             previewLightD.position.set(5, 5, 5).normalize();
-            const previewLightA = new THREE.AmbientLight(0x404040);
+            const previewLightA = new THREE.AmbientLight(0x404040, 4);
             previewScene.add(previewLightD);
             previewScene.add(previewLightA);
             previewScene.add(preview_model);
     
             previewRenderer.render(previewScene, previewCamera);
-            
-            // Create a Data URL for the image
-            /* canvas.toBlob((blob) => {
-                if (blob) {
-                    const imgURL = URL.createObjectURL(blob);
-                    resolve(imgURL);  // Resolve the Promise with the URL
-                } else {
-                    reject("Failed to create image blob");
-                }
-            }, 'image/png'); */
             const imgURL = canvas.toDataURL('image/png');
             if (imgURL) {
                 resolve(imgURL);

@@ -4,28 +4,51 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<link rel="stylesheet" href="css/dash.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans">
 	<title>The Podium | Dashboard</title>
 	<link rel="icon" href="css/favicon.png" type="image/x-icon">
 </head>
 
 <body>
-    <div class="sidenav">
+    <header class="header">
+        <ion-icon name="menu-outline" style="display: none;" id="navOpen"></ion-icon>
         <h3>Dashboard</h3>
-        <a href="index.html" id="homepageBtn" style="display:none;">Homepage</a>
-        <button id="refreshBtn" style="display:none;">Refresh Models</button>
-        <button id="google-sign-in">Sign in with Google</button>
-        <button id="sign-out" style="display:none;">Sign Out</button>
-        <div class="userinfo">
-            <span id="userDisplayName" style="display:none;"></span>
-            <span id="userEmail" style="display:none;"></span>
-        </div>
-        </div>
-    </div>
-    
-        <div id="dashboard"></div>
-    
+    </header>
 
+    <section class="navroot">
+        <ion-icon name="chevron-back-outline" id="navClose"></ion-icon>
+    </section>
+
+    <nav class="sidenav">
+        <div class="options">
+            <div id="directHomepage">
+                <a href="index.html" style="display:none;"><ion-icon name="home-outline"></ion-icon> Homepage</a>
+            </div>
+            <div id="refreshBtn" style="display:none;">
+                <a href="#"> <ion-icon name="refresh-outline"></ion-icon></a>
+                <span>Refresh Models</span>
+            </div>
+            <div id="sign-in">
+                <a href="#"> <ion-icon name="log-in-outline"></ion-icon></a>
+                <span>Sign In</span>
+            </div>
+            <div id="sign-out" style="display: none;">
+                <a href="#"> <ion-icon name="log-out-outline"></ion-icon></a>
+                <span>Sign Out</span>
+            </div>
+        </div>
+        <div id="userInfo">
+            <a href="#"><ion-icon name="person-outline"></ion-icon></a>
+            <span id="userName"></span>
+            <span id="userMail"></span>
+        </div>
+    </nav>
+    
+    <main class="content" id="content"></main>
+    
     <script defer type="module" src="js/dashboard.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>
