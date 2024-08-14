@@ -15,59 +15,60 @@
 	</script>
 	<script defer type="module" src="js/firebase.js"></script>
 	<title>The Podium</title>
-	<link rel="icon" href="css/favicon.png" type="image/x-icon">
+	<link rel="icon" href="css/faviconnew.png" type="image/x-icon">
 </head>
 
 <body>
-	<div id="heading">
-		<div class="wrapper">
+	<header class="heading">
+		<div class="top-login">
+			<img src="css/faviconnew.png" alt="sitelogo">
 			<h1><a href="index.html">The Podium</a></h1>
-			<div class="headbuttons">
-				<div id="top-login">
-					<button id="google-sign-in">Sign in</button>
-					<button id="sign-out" style="display:none;">Sign Out</button>
-					<span class="buttonseperator">|</span>
-					<button id="dashboardBtn" style="display: none;">Dashboard</button>
-				</div>
+		</div>
+		<div class="top-login">
+			<button id="google-sign-in" class="top-buttons">Sign In</button>
+			<button id="sign-out" style="display:none;" class="top-buttons">Sign Out</button>
+			<span class="buttonseperator">|</span>
+			<button id="dashboardBtn" style="display: none;" class="top-buttons">Dashboard</button>
+		</div>
+	</header>
+	
+	<main class="content">
+		<div class="sidenav" id="sidenav">
+			<div id="upload">
+				<h2><ion-icon name="cloud-upload-outline" class="navIcon"></ion-icon> Model Upload</h2>
+				<label for="h2" id="signInRec"><ion-icon name="alert-circle-sharp" class="alert"></ion-icon>To upload and save a model, you need to Sign In.</label>
+				<input type="file" id="userUpload" accept=".glb">
+				<label for="userUpload" class="customUploadButton" id="customUploadBtn">Select Model</label>
+				<button id="modelUpload">Upload Model</button>
+				<input type="text" id="cModelName" maxlength="25" minlength="3" size="30" placeholder="Enter a name for your model.">
+				<button id="modelSave">Save Model</button>
+				<label for="modelSave" id="save-info" style="display: none;"></label>
+			</div>
+			<h2 class="navHeaders"><ion-icon name="cloud-download-outline" class="navIcon"></ion-icon> Models </h2>
+			<ul>
+				<li id="sf23"><span>Scuderia Ferrari F1 SF23</span></li>
+				<li id="rb19"><span>Oracle Red Bull F1 RB19</span></li>
+				<li id="artest"><span>AR Test Model</span></li>
+			</ul>
+			
+			<h2 class="navHeaders"><ion-icon name="information-circle-outline" class="navIcon"></ion-icon> Current Model </h2>
+			<span id="modelinfo">Scuderia Ferrari F1 SF23</span>
+			<button id="reset"> Reset Position</button>
+			
+			<h2 class="navHeaders"> Web AR </h2>
+			<div class="navAR" id="navAR">
 			</div>
 		</div>
-		<span id="modelinfo">Scuderia Ferrari F1 SF23</span>
-		<button id="reset"> reset</button>
-	</div>
-	
-	<div class="sidenav" id="sidenav">
-		<h1> MODELS </h1>
-		<ul>
-			<li><span id="sf23">Scuderia Ferrari F1 SF23</span></li>
-			<li><span id="rb19">Oracle Red Bull F1 RB19</span></li>
-			<li><span id="artest">AR Test Model</span></li>
-		</ul>
-	</div>
-	<div class="navbutton" id="navbutton">
-		<span></span>
-		<span></span>
-		<span></span>
-	</div>
-	<div id="login-ui">
-		<input type="file" id="userUpload" accept=".glb">
-		<button id="modelUpload">Upload Model</button>
-		<input type="text" id="cModelName" maxlength="25" minlength="3" size="30" placeholder="Enter a name for your model.">
-		<button id="modelSave">Save Model</button>
-		<label for="modelSave" id="save-info" style="display: none;"></span>
-    </div>
-	
-	<!-- <div id="content">
-		<div id="web-ui">
-			<div>
+		
+		<div id="model" class="model-container">
+			<ion-icon name="menu-sharp" id="menuOpenButton"></ion-icon>
+			<div class="load">
+				<div id="progress">Loading Model</div>
+				<span id="load-info"></span>
 			</div>
 		</div>
-	</div> -->
+	</main>
 	
-	<div id="model">
-		<div id="progress">Loading Model</div>
-		<span id="load-info"></span>
-	</div>
-
 	<!-- AR OVERLAY -->
 	 <div id="ar-content">
 		<input type="range" id="ar-scale" min="0.1" max="1" step="0.1" value="0.25">
@@ -76,7 +77,9 @@
 		<button id="ar-remove">🧹</button>
 	 </div>
 
-	<script type="module" src="js/main.js"></script>
+	 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+	 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+	 <script type="module" src="js/main.js"></script>
 </body>
 
 </html>

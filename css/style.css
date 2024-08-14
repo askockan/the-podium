@@ -6,442 +6,304 @@
 }
 
 body {
-  margin: 0px;
-  overflow: hidden;
-  background: linear-gradient(to top, white, darkgrey);
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: 63px 1fr;
 }
 
-#navbutton {
-  width: 40px;
-  height: 40px;
-  transition: .5s ease-out;
-  top: 36.15%;
-  margin-left: 10px;
-  position: fixed;
-  padding: 2px;
+.heading {
+  grid-row: 1 / 2;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0E1E2A;
+  padding-right: 50px;
+  padding-left: 50px;
 }
 
-#navbutton span {
-  height: 5px;
-  width: 88%;
-  background-color: darkgray;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  border-radius: 25px;
-  transform:  translate(-50%, -50%);
-  transition: .3s ease;
+.heading a {
+  text-decoration: none;
+  color: white;
+  padding: 0 12px;
 }
 
-#navbutton span:nth-child(1) {
-  top: 25%;
+.heading img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
 }
 
-#navbutton.active span:nth-child(1) {
-  top: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
+.top-login {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-#navbutton.active span:nth-child(2) {
-  opacity: 0;
+.top-buttons {
+  margin: 0 8px;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  transition: .2s;
+  color: white;
 }
 
-#navbutton span:nth-child(3) {
-  top: 75%;
-}
-
-#navbutton.active span:nth-child(3) {
-  top: 50%;
-  transform: translate(-50%, -50%) rotate(-45deg);
-} 
-
-#navbutton:hover span {
+.top-buttons:hover {
+  color: #0d6efd;
   cursor: pointer;
-  background-color: white;
+}
+
+.buttonseperator {
+  display: none;
+  color: white;
+}
+
+.content {
+  grid-row: 2 / 3;
+  display: grid;
+  grid-template-columns: 0px 1fr;
+  transition: .2s;
+}
+
+.content.open {
+  grid-template-columns: 220px 1fr;
 }
 
 .sidenav {
-  position: absolute;
-  background: linear-gradient(to top, whitesmoke, grey);
-  transition: .3s ease-in;
-  top: 35%;
-  margin-left: -215px;
-}
-
-.sidenav h1 {
-  text-align: center;
-  padding: 10px;
-  font-weight: 550;
-  font-size: 1.6rem;
-  border: 5px outset black;
-}
-
-.sidenav ul li {
-  list-style: none;
-  border: 2px outset black;
-}
-
-.sidenav ul li span {
-  display: block;
-  text-align: center;
-  font-weight: 550;
-  padding: 10px;
-  color: inherit;
-  text-decoration: none;
-  transition: .2s ease-out;
-}
-
-.sidenav ul li #rb19 {
-  color: orange;
-  background: #23326A;
-}
-
-.sidenav ul li #sf23 {
-  color: black;
-  background: darkred;
-}
-
-.sidenav ul li #artest {
-  color: black;
-  background: yellowgreen;
-}
-
-.sidenav ul li span:hover {
-  padding: 15px;
-  color: white !important;
-  cursor: pointer;
-}
-
-#heading {
-  position: fixed;
-  width: 100%;
+  display: flex;
+  visibility: hidden;
+  flex-direction: row;
+  background-color: white;
+  border-top: 1px outset whitesmoke;
+  border-right: 1px outset whitesmoke;
   padding: 12px;
-  color: white;
-  background-color: grey;
+  max-height: 100dvh;
+  overflow-y: scroll;
 }
 
-#heading h1 {
-  margin-top: 1rem;
-  text-align: left;
-  font-size: 2rem;
-  color: inherit;
-  display: block;
-  width: fit-content;
-  height: fit-content;
-  margin: 0;
-  margin-left: 12px;
-  font-weight: 500;
-}
-
-#heading h1 a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#login-ui {
-  display: flex;
-  position: absolute;
+.sidenav.open {
+  visibility: visible;
   flex-direction: column;
-  align-items: flex-start;
-  top: 8%;
-  margin-left: 5px;
 }
-.buttonseperator {
+
+.sidenav h2 {
+  border-bottom: 1px dashed black;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.sidenav .navHeaders {
+  margin-top: 20px;
+}
+
+.sidenav #upload {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidenav #upload #save-info {
+  text-align: center;
+  color: #24292E;
+  font-size: 0.7rem;
+}
+
+.sidenav #upload .alert {
+  color: red;
+  margin-right: 5px;
+}
+
+.sidenav #upload input {
+  background: #FAFBFC;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  color: #24292E;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 6px 2px;
+  transition: .2s;
+}
+
+.sidenav #upload input[type="file"] {
   display: none;
 }
 
-#top-login #google-sign-in {
+.sidenav #upload button, #reset, .customUploadButton, .sidenav li {
+  background: #FAFBFC;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  color: #24292E;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 6px 16px;
+  transition: .2s;
+  text-align: center;
+}
+
+.sidenav #upload button:hover, #reset:hover, .customUploadButton:hover, .sidenav li:hover {
+  background-color: #F3F4F6;
+  text-decoration: none;
+  transition-duration: 0.1s;
   cursor: pointer;
-  transition: color .3s;
-  background: none;
-  outline: none;
-  border: none;
-  color: whitesmoke;
-  font-size: 1rem;
-  font-weight: 500;
 }
 
-#top-login #sign-out {
-  cursor: pointer;
-  transition: color .3s;
-  background: none;
-  outline: none;
-  border: none;
-  color: whitesmoke;
-  font-size: 1rem;
-  font-weight: 500;
-  margin-right: 4px;
+.sidenav #upload button:focus, #reset:focus, .customUploadButton:focus, .sidenav li:focus {
+  outline: 1px transparent;
 }
 
-#top-login #dashboardBtn {
-  cursor: pointer;
-  transition: color .3s;
-  background: none;
-  outline: none;
-  border: none;
-  color: whitesmoke;
-  font-size: 1rem;
-  font-weight: 500;
-  margin-left: 4px;
+.sidenav #upload button:active, #reset:active, .customUploadButton:active, .sidenav li:active {
+  background-color: #EDEFF2;
+  box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+  transition: none 0s;
 }
 
-#heading .headbuttons #top-login {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
+.sidenav #modelinfo {
+  text-align: center;
 }
 
-#top-login #sign-out:hover {
-  color: black;
-}
-
-#top-login #google-sign-in:hover {
-  color: black;
-}
-
-#top-login #dashboardBtn:hover {
-  color: black;
-}
-
-#login-ui button, #login-ui input, #login-ui label{
-  display: inline-block;
-  border: 3px outset black;
-  color: black;
-  font-weight: 500;
-  font-size: 1rem;
-  background: linear-gradient(to top, whitesmoke, grey);
-  padding: 2px;
-  margin: 1.5px 5px;
-  transition: .3s ease;
-}
-
-#login-ui button:hover, #login-ui input:hover, #login-ui label:hover {
-  background-color: whitesmoke;
-  color:whitesmoke;
-  padding: 4px;
-  cursor: pointer;
-  border: 3px inset black;
-} 
-
-#modelinfo {
-  position: fixed;
-  color: white;
-  font-weight: 500;
-  font-size: 1.4rem;
-  bottom: 86.5%;
-  border: 5px outset;
-  border-color: darkgrey;
-  background: linear-gradient(to top, darkgrey, grey);
-  right: 0%;
-  padding: 4px;
-}
-
-#progress {
-  font-size: 3em;
-  color: white;
-  position: absolute;
-  bottom: 15%;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-}
-
-#load-info {
-  font-size: 2em;
-  color: white;
-  position: absolute;
-  bottom: 10%;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-}
-
-#web-ui {
+.sidenav .navAR {
   display: flex;
   flex-direction: column;
-  position: fixed;
-  width: 200px;
-  top: 300px;
-  left: 1650px;
-  justify-content: start;
-  color: whitesmoke;
+  align-items: center;
 }
 
-#reset {
-  position: fixed;
-  width: 125px;
+.model-container {
+  position: relative;
+  background-color: whitesmoke;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.model-container ion-icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
   height: 30px;
-  bottom: 83%;
-  right: 0%;
-  background: linear-gradient(to top, darkgrey, grey);
-  outline: none;
-  border-radius: 5px;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  color: whitesmoke;
+  color: black;
+  z-index: 1;
 }
 
-#reset:hover {
-  background: linear-gradient(to top, grey, darkgrey);
+.model-container ion-icon:hover {
   cursor: pointer;
 }
 
-#reset:active {
-  transform: translateY(3px);
+.model-container .load {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: calc(50% - 150px);
+  top: calc(50% - 100px);
+  font-size: 3rem;
+  color: #104cba;
 }
 
+.model-container div canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 100%;
+  width: 100%;
+  max-height: 100%;
+  height: 100%;
+}
+
+/* AR Content */
 #ar-content * {
   display: none;
 }
 
 @media only screen and (max-width: 600px) {
-  #progress {
-    font-size: 2em
+
+  .heading {
+    padding-right: 10px;
+    padding-left: 10px;
   }
 
-  #web-ui {
-    flex-direction: column;
-    width: 150px;
-    top: 16%;
-    left: 60%;
-    justify-items: center;
-    align-items: center;
-    color: whitesmoke;
+  .heading a {
+    font-size: 1.3rem;
+    padding: 0 6px;
   }
 
-  #heading {
-    position: fixed;
-    width: 100%;
-    padding: 8px;
+  .heading img {
+    width: 30px;
+    height: 30px;
+    margin-right: 0;
+  }
+
+  .top-buttons {
+    margin: 0 8px;
+    background: none;
+    border: none;
+    font-size: .9rem;
+    transition: .2s;
     color: white;
-    background-color: grey;
   }
 
-  #heading h1 {
-    margin-top: 1rem;
-    text-align: left;
-    font-size: 1.4rem;
-    color: inherit;
-    display: block;
-    width: fit-content;
-    height: fit-content;
-    margin: 0;
-    margin-left: 5px;
-    font-weight: 550;
+  .content.open {
+    grid-template-columns: 140px 1fr;
   }
 
-  #modelinfo {
-    position: fixed;
-    color: white;
-    font-weight: 500;
-    font-size: 0.8rem;
-    bottom: 85%;
-    border: 5px outset;
-    border-color: darkgrey;
-    background: linear-gradient(to top, darkgrey, grey);
-    right: 0%;
-    padding: 4px;
-  }
-
-  #navbutton {
-    top: 36%;
-    padding: 1px;
-  }
-  
-  #navbutton:hover {
-    cursor: pointer;
-    border: none
-  }
-  
   .sidenav {
-    position: absolute;
-    background: linear-gradient(to top, whitesmoke, grey);
-    top: 34.5%;
-    margin-left: -215px;
-  }
-  
-  .sidenav h1 {
-    text-align: center;
-    padding: 10px;
-    font-weight: 500;
-    border: 5px outset black;
-  }
-  
-  .sidenav ul li {
-    list-style: none;
-    border: 2px outset black;
-  }
-  
-  .sidenav ul li span {
-    display: block;
-    text-align: center;
-    font-weight: 550;
-    padding: 10px;
-    color: inherit;
-    text-decoration: none;
-  }
-  
-  .sidenav ul li span:hover {
-    padding: 15px;
-    color: white !important;
-    cursor: pointer;
-  }
-  
-  #login-ui {
-    top: 4%;
-    right: 81%;
-    transform: scale(65%);
-  }
-  
-  #login-ui button{
-    display: inline-block;
-    border: 3px outset black;
-    color: black;
-    font-weight: 500;
-    font-size: 1.1rem;
-    background: linear-gradient(to top, whitesmoke, grey);
-    padding: 2px;
-    margin: 1.5px 5px;
-    transition: .3s ease;
-    width: 160%;
-  }
-  
-  #login-ui button:hover {
-    background-color: whitesmoke;
-    color:whitesmoke;
-    padding: 4px;
-    cursor: pointer;
-    border: 3px inset black;
+    padding: 8px;
   }
 
-  #login-ui input, #login-ui label {
-    width: 275%;
+  .sidenav h2 {
+    border-bottom: 1px dashed black;
+    margin-bottom: 8px;
+    text-align: center;
+    font-size: 1.2rem;
   }
+
+  .sidenav .navHeaders {
+    margin-top: 14px;
+  }
+
+  .sidenav .navIcon {
+    display: none;
+  }
+
+  .sidenav #upload #save-info {
+    text-align: center;
+    color: #24292E;
+    font-size: 0.55rem;
+  }
+
+  .sidenav #upload input {
+    font-size: 0.6rem;
+    padding: 4px 2px;
+  }
+
+  .sidenav #upload button, #reset, .customUploadButton, .sidenav li {
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    list-style: none;
+  }
+
+  .sidenav #modelinfo {
+    font-size: 0.75rem;
+  }
+
+  .model-container {
+    position: relative;
+    background-color: whitesmoke;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .model-container .load {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    left: calc(50% - 75px);
+    top: calc(50%);
+    font-size: 1.5rem;
+    color: #104cba;
+  }
+
   
-  #reset {
-    width: 100px;
-    height: 25px;
-    bottom: 81%;
-    right: 0%;
-    border-radius: 5px;
-    font-size: 1.1rem;
-  }
-  
-  #reset:active {
-    transform: translateY(1.5px);
-  }
 
   /* AR Overlay */
   #ar-content #ar-place {

@@ -3,9 +3,9 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ARButton } from 'three/addons/webxr/ARButton.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-const navbutton = document.getElementById('navbutton');
-const sidenav = document.getElementById('sidenav');
-const sideNavCSS = window.getComputedStyle(sidenav, null);
+const sideNav = document.getElementById('sidenav');
+const menuOpenBtn = document.getElementById('menuOpenButton');
+const content = document.querySelector('.content');
 const modelinfo = document.getElementById('modelinfo');
 const progress = document.getElementById('progress');
 const loadInfo = document.getElementById('load-info');
@@ -24,7 +24,7 @@ const artest = document.getElementById('artest');
 
 let container;
 let camera, scene, renderer;
-let loader, previewLoader;
+let loader;
 let controller, controls;
 let display_model, preview_model;
 
@@ -102,17 +102,20 @@ arScaleSlider.addEventListener('input', (e) => {
 })
 
 function init() {
-    // Model Menu
-    navbutton.addEventListener('click', () => {
-        let sideNavMarginL = sideNavCSS.getPropertyValue('margin-left');
-        if (sideNavMarginL == '-215px') {
-            sidenav.style.marginLeft = '0';
-            navbutton.classList.toggle('active');
+    let menuCurrent = "closed";
+    menuOpenBtn.addEventListener('click', () => {
+        content.classList.toggle('open');
+        if (menuCurrent == "closed") {
+            menuCurrent = "open";
+            menuOpenBtn.setAttribute('name', 'chevron-back-sharp');
+            sideNav.classList.toggle('open');
         } else {
-            sidenav.style.marginLeft = '-215px';
-            navbutton.classList.toggle('active');
+            menuOpenBtn.setAttribute('name', 'menu-sharp');
+            sideNav.classList.toggle('open');
+            menuCurrent = "closed";
         }
     })
+
     // Reset Controls
     function resetModel() {
         controls.reset();
@@ -134,13 +137,28 @@ function init() {
 
     // Lights
     // TO-DO: add sliders to modify lightning based on VALUE not input
-    const spotLight = new THREE.SpotLight(0xffffff, 2000, 100, 0.22, 1);
-    spotLight.position.set(0, 15, 0);
-    spotLight.castShadow = true;
-    spotLight.shadow.bias = -0.0001;
-    scene.add(spotLight);
+    const spotLight1 = new THREE.SpotLight(0xffffff, 600, 100, 0.22, 1);
+    spotLight1.position.set(0, 15, 0);
+    spotLight1.castShadow = true;
+    spotLight1.shadow.bias = -0.0001;
+    scene.add(spotLight1);
+    const spotLight2 = new THREE.SpotLight(0xffffff, 600, 100, 0.22, 1);
+    spotLight2.position.set(15, 0, 0);
+    spotLight2.castShadow = true;
+    spotLight2.shadow.bias = -0.0001;
+    scene.add(spotLight2);
+    const spotLight3 = new THREE.SpotLight(0xffffff, 600, 100, 0.22, 1);
+    spotLight3.position.set(0, 0, 15);
+    spotLight3.castShadow = true;
+    spotLight3.shadow.bias = -0.0001;
+    scene.add(spotLight3);
+    const spotLight4 = new THREE.SpotLight(0xffffff, 600, 100, 0.22, 1);
+    spotLight4.position.set(-15, 0, 0);
+    spotLight4.castShadow = true;
+    spotLight4.shadow.bias = -0.0001;
+    scene.add(spotLight4);
 
-    const ambientLight = new THREE.AmbientLight(0x404040, 100);
+    const ambientLight = new THREE.AmbientLight(0x404040, 60);
     ambientLight.position.set(1, 1, 0);
     /* spotLight.castShadow = false; */
     scene.add(ambientLight);
@@ -162,7 +180,7 @@ function init() {
     controls.enablePan = true;
     controls.autoRotate = false;
     
-    // AR Setup
+    // AR Button and AR Settings Setup
 
     let options = {
         requiredFeatures: ['hit-test'],
@@ -170,7 +188,7 @@ function init() {
     }
 
     options.domOverlay = {root: document.getElementById("ar-content")};
-    document.body.appendChild( ARButton.createButton(renderer, options));
+    document.getElementById('navAR').appendChild( ARButton.createButton(renderer, options));
     
     // Pre-Uploaded Models
 
@@ -221,7 +239,7 @@ function init() {
         loadInfo.style.display = 'none';
     }, (xhr) => {
         let roundedload = Math.round(`${xhr.loaded / xhr.total * 100}`);
-        loadInfo.innerHTML= `loading ${roundedload}%`;
+        loadInfo.innerHTML= `${roundedload}%`;
     }, (error) => {
         console.error(error);
     });
@@ -315,8 +333,6 @@ function modelLoader(modelName, modelinfoText) {
     loadInfo.style.display = 'flex';
     modelinfo.style.display = 'block';
     modelinfo.innerHTML = modelinfoText;
-    sidenav.style.marginLeft = '-215px';
-    navbutton.classList.toggle('active');
 
     loader = new GLTFLoader().setPath(`models/${modelName}/`);
     loader.load(`${modelName}.glb`, (gltf) => {
@@ -477,7 +493,12 @@ export async function previewImgCapture(url) {
                 reject("ERR");
             }
         }, undefined, undefined, (error) => {
-            reject(error); // Reject the Promise if there's an error loading the GLTF
+            reject(error);
         });
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("ARButton").innerHTML = "View in AR";
+    document.getElementById("ARButton").style.position = 'unset';
+})

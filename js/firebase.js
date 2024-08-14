@@ -24,13 +24,16 @@ const googleSignIn = document.getElementById('google-sign-in');
 const googleSignOut = document.getElementById('sign-out');
 const dashboardBtn = document.getElementById('dashboardBtn');
 const buttonSeperator = document.querySelector('.buttonseperator');
+const signInWarn = document.getElementById('signInRec');
 const userUploadBtn = document.getElementById('userUpload');
+const customUploadBtn = document.getElementById('customUploadBtn');
 const modelUploadBtn = document.getElementById('modelUpload');
 const modelSaveBtn = document.getElementById('modelSave');
 const cModelName = document.getElementById('cModelName');
 
 googleSignIn.addEventListener('click', signIn);
 googleSignOut.addEventListener('click', signOut);
+userUploadBtn.addEventListener('input', viewFileName);
 modelUploadBtn.addEventListener('click', uploadModel);
 modelSaveBtn.addEventListener('click', saveModel);
 dashboardBtn.addEventListener('click', dashboardDirect);
@@ -64,6 +67,15 @@ function dashboardDirect() {
     })
 }
 
+function viewFileName() {
+    const file = userUploadBtn.files[0]
+    if (file) {
+        customUploadBtn.innerText = file.name.split('.')[0];
+    } else {
+        return
+    }
+}
+
 onAuthStateChanged(auth, (user) => {
     if (user) {
         UIForSignIn();
@@ -77,6 +89,7 @@ function UIForSignIn() {
     googleSignOut.style.display = 'block';
     googleSignIn.style.display = 'none';
     dashboardBtn.style.display = 'block';
+    signInWarn.style.display = 'none';
     buttonSeperator.style.display = 'block';
 }
 
@@ -85,6 +98,7 @@ function UIForSignOut() {
     googleSignOut.style.display = 'none';
     googleSignIn.style.display = 'block';
     dashboardBtn.style.display = 'none';
+    signInWarn.style.display = 'block';
     buttonSeperator.style.display = 'none';
 }
 
@@ -145,6 +159,8 @@ async function saveModel() {
         alert("Please enter a valid name for your model.")
         return;
     }
+
+    modelSaveBtn.innerText = 'Saving Model...'
     
     onAuthStateChanged(auth, async (user) => {
         if (user) {
@@ -166,6 +182,7 @@ async function saveModel() {
                         const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
                         document.getElementById('save-info').style.display = 'block';
                         document.getElementById('save-info').innerHTML = 'Uploading Model ' + progress + '%';
+                        document.body.style.cursor = 'progress';
                     }, 
                     (error) => {
                         console.error('Error uploading model:', error);
@@ -174,6 +191,8 @@ async function saveModel() {
                     }, 
                     () => {
                         document.getElementById('save-info').style.display = 'none';
+                        document.body.style.cursor = 'inital';
+                        modelSaveBtn.innerText = 'Save Model';
                         cModelName.value = "";
                         userUploadBtn.value = "";
                         alert("File uploaded successfully!");
