@@ -102,7 +102,7 @@ arScaleSlider.addEventListener('input', (e) => {
 })
 
 function init() {
-    let menuCurrent = "open";
+    let menuCurrent = "closed";
     menuOpenBtn.addEventListener('click', () => {
         content.classList.toggle('open');
         if (menuCurrent == "closed") {

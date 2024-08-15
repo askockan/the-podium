@@ -254,8 +254,12 @@ main {
   left: 10px;
   width: 30px;
   height: 30px;
-  color: var();
+  color: var(--header-color);
   z-index: 1;
+}
+
+.model-container ion-icon:active {
+  color: var(--header-text);
 }
 
 .model-container ion-icon:hover {
