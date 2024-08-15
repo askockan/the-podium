@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as authSignOut, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 import { getFirestore} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
+import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL, listAll } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 import { userModelLoader, previewImgCapture } from './main.js';
 
 const firebaseConfig = {
@@ -185,6 +185,23 @@ async function saveModel() {
         if (user) {
             const userUID = user.uid;
             let holderforfilename = cModelName.value;
+            const modelsFolderRef = ref(storage, `${userUID}`);
+            
+            try {
+                const listResult = await listAll(modelsFolderRef);
+                for (const item of listResult.items) {
+                    const fileName = item.name;
+                    if (holderforfilename === fileName.split('.')[0]) {
+                        alert(`You already have a model named as "${holderforfilename}".`);
+                        modelSaveBtn.innerText = 'Save Model';
+                        cModelName.value = "";
+                        document.body.style.cursor = 'inital';
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching files:", error);
+            }
             const modelRef = ref(storage, `${userUID}/${holderforfilename}.glb`);
             const fileUrl = URL.createObjectURL(file);
             const previewDataURL = await previewImgCapture(fileUrl);

@@ -178,6 +178,10 @@ main {
   margin-right: 5px;
 }
 
+.sidenav #upload #signInRec {
+  color: var(--sidenav-header);
+}
+
 .sidenav #upload input {
   background: var(--sidenav-button);
   border: 1px solid rgba(27, 31, 35, 0.15);
@@ -319,7 +323,6 @@ main {
     border: none;
     font-size: .9rem;
     transition: .2s;
-    color: white;
   }
 
   .content.open {
@@ -332,7 +335,7 @@ main {
   }
 
   .sidenav h2 {
-    border-bottom: 1px dashed black;
+    border-bottom: 1px dashed;
     margin-bottom: 8px;
     text-align: center;
     font-size: 1.2rem;
@@ -349,7 +352,6 @@ main {
 
   .sidenav #upload #save-info {
     text-align: center;
-    color: #24292E;
     font-size: 0.55rem;
   }
 
@@ -372,7 +374,6 @@ main {
 
   .model-container {
     position: relative;
-    background-color: whitesmoke;
     max-width: 100%;
     max-height: 100%;
   }
@@ -386,8 +387,6 @@ main {
     top: calc(50%);
     font-size: 1.5rem;
   }
-
-  
 
   /* AR Overlay */
   #ar-content #ar-place {
@@ -411,7 +410,6 @@ main {
     background: grey;
     outline: none;
     opacity: 0.7;
-    -webkit-transition: .2s;
     transition: opacity .2s;
   }
 
