@@ -95,6 +95,10 @@ function switchTheme() {
     darkmode !== "active" ? enableDarkmode() : disableDarkmode();
 }
 
+if (darkmode === "active") {
+    enableDarkmode();
+}
+
 onAuthStateChanged(auth, (user) => {
     if (user) {
         UIForSignIn();
@@ -245,10 +249,6 @@ async function saveModel() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (darkmode === "active") {
-        enableDarkmode();
-    }
-
     const urlParams = new URLSearchParams(window.location.search);
     const model = urlParams.get('model')
     if (model) {

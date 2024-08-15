@@ -91,6 +91,10 @@ main {
   color: var(--header-text);
 }
 
+#theme-switch ion-icon:hover {
+  cursor: pointer;
+}
+
 #theme-switch ion-icon:first-child {
   display: none;
 }
