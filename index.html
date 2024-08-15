@@ -25,6 +25,10 @@
 			<h1><a href="index.html">The Podium</a></h1>
 		</div>
 		<div class="top-login">
+			<button id="theme-switch">
+				<ion-icon name="sunny-outline"></ion-icon>
+				<ion-icon name="moon-outline"></ion-icon>
+			</button>
 			<button id="google-sign-in" class="top-buttons">Sign In</button>
 			<button id="sign-out" style="display:none;" class="top-buttons">Sign Out</button>
 			<span class="buttonseperator">|</span>
@@ -40,7 +44,7 @@
 				<input type="file" id="userUpload" accept=".glb">
 				<label for="userUpload" class="customUploadButton" id="customUploadBtn">Select Model</label>
 				<button id="modelUpload">Upload Model</button>
-				<input type="text" id="cModelName" maxlength="25" minlength="3" size="30" placeholder="Enter a name for your model.">
+				<input type="text" id="cModelName" maxlength="25" minlength="3" size="30" placeholder="Enter a name for your model." autocomplete="off">
 				<button id="modelSave">Save Model</button>
 				<label for="modelSave" id="save-info" style="display: none;"></label>
 			</div>
@@ -55,7 +59,7 @@
 			<span id="modelinfo">Scuderia Ferrari F1 SF23</span>
 			<button id="reset"> Reset Position</button>
 			
-			<h2 class="navHeaders"> Web AR </h2>
+			<h2 class="navHeaders"> <ion-icon name="videocam-outline" class="navIcon"></ion-icon> Web AR </h2>
 			<div class="navAR" id="navAR">
 			</div>
 		</div>

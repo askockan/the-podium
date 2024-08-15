@@ -31,6 +31,9 @@ const modelUploadBtn = document.getElementById('modelUpload');
 const modelSaveBtn = document.getElementById('modelSave');
 const cModelName = document.getElementById('cModelName');
 
+let darkmode = localStorage.getItem('darkmode');
+const themeSwitch = document.getElementById('theme-switch');
+
 googleSignIn.addEventListener('click', signIn);
 googleSignOut.addEventListener('click', signOut);
 userUploadBtn.addEventListener('input', viewFileName);
@@ -38,6 +41,7 @@ modelUploadBtn.addEventListener('click', uploadModel);
 modelSaveBtn.addEventListener('click', saveModel);
 dashboardBtn.addEventListener('click', dashboardDirect);
 cModelName.addEventListener('input', ignoreSpace);
+themeSwitch.addEventListener('click', switchTheme);
 
 function signIn() {
     signInWithPopup(auth, provider)
@@ -74,6 +78,21 @@ function viewFileName() {
     } else {
         return
     }
+}
+
+function enableDarkmode() {
+    document.body.classList.add('darkmode');
+    localStorage.setItem('darkmode', 'active');
+}
+
+function disableDarkmode() {
+    document.body.classList.remove('darkmode');
+    localStorage.setItem('darkmode', null);
+}
+
+function switchTheme() {
+    darkmode = localStorage.getItem('darkmode');
+    darkmode !== "active" ? enableDarkmode() : disableDarkmode();
 }
 
 onAuthStateChanged(auth, (user) => {
@@ -209,6 +228,10 @@ async function saveModel() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    if (darkmode === "active") {
+        enableDarkmode();
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const model = urlParams.get('model')
     if (model) {

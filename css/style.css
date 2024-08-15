@@ -1,3 +1,31 @@
+:root {
+  --header-color: #0E1E2A;
+  --header-text: white;
+  --header-hover: #0d6efd;
+  --sidenav-color: white;
+  --sidenav-border: whitesmoke;
+  --sidenav-header: black;
+  --sidenav-button: #FAFBFC;
+  --sidenav-button-hover: #F3F4F6;
+  --sidenav-button-active: #EDEFF2;
+  --model-color: whitesmoke;
+  --model-load-text: #104cba;
+}
+
+.darkmode {
+  --header-color: #404040;
+  --header-text: white;
+  --header-hover: black;
+  --sidenav-color: #353535;
+  --sidenav-border: #050505;
+  --sidenav-header: whitesmoke;
+  --sidenav-button: #999999;
+  --sidenav-button-hover: #acacac;
+  --sidenav-button-active: #EDEFF2;
+  --model-color: #151515;
+  --model-load-text: whitesmoke;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -9,6 +37,12 @@ body {
   height: 100dvh;
   display: grid;
   grid-template-rows: 63px 1fr;
+  overflow: hidden;
+}
+
+main {
+  min-width: 0;
+  min-height: 0;
 }
 
 .heading {
@@ -17,14 +51,14 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: #0E1E2A;
+  background-color: var(--header-color);
   padding-right: 50px;
   padding-left: 50px;
 }
 
 .heading a {
   text-decoration: none;
-  color: white;
+  color: var(--header-text);
   padding: 0 12px;
 }
 
@@ -40,23 +74,52 @@ body {
   align-items: center;
 }
 
+#theme-switch {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: var(--header-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+}
+
+#theme-switch ion-icon {
+  height: 25px;
+  width: 25px;
+  color: var(--header-text);
+}
+
+#theme-switch ion-icon:first-child {
+  display: none;
+}
+
+.darkmode #theme-switch ion-icon:last-child {
+  display: none;
+}
+
+.darkmode #theme-switch ion-icon:first-child {
+  display: block;
+}
+
 .top-buttons {
   margin: 0 8px;
   background: none;
   border: none;
   font-size: 1rem;
   transition: .2s;
-  color: white;
+  color: var(--header-text);
 }
 
 .top-buttons:hover {
-  color: #0d6efd;
+  color: var(--header-hover);
   cursor: pointer;
 }
 
 .buttonseperator {
   display: none;
-  color: white;
+  color: var(--header-text);
 }
 
 .content {
@@ -67,19 +130,19 @@ body {
 }
 
 .content.open {
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 225px 1fr;
 }
 
 .sidenav {
   display: flex;
+  flex-wrap: wrap;
   visibility: hidden;
   flex-direction: row;
-  background-color: white;
-  border-top: 1px outset whitesmoke;
-  border-right: 1px outset whitesmoke;
+  background-color: var(--sidenav-color);
+  border-top: 1px outset var(--sidenav-border);
+  border-right: 1px outset var(--sidenav-border);
   padding: 12px;
   max-height: 100dvh;
-  overflow-y: scroll;
 }
 
 .sidenav.open {
@@ -88,9 +151,11 @@ body {
 }
 
 .sidenav h2 {
-  border-bottom: 1px dashed black;
+  color: var(--sidenav-header);
+  border-bottom: 1px dashed var(--sidenav-header);
   margin-bottom: 12px;
-  text-align: center;
+  text-align: left;
+  width: 210px;
 }
 
 .sidenav .navHeaders {
@@ -103,7 +168,7 @@ body {
 }
 
 .sidenav #upload #save-info {
-  text-align: center;
+  text-align: left;
   color: #24292E;
   font-size: 0.7rem;
 }
@@ -114,7 +179,7 @@ body {
 }
 
 .sidenav #upload input {
-  background: #FAFBFC;
+  background: var(--sidenav-button);
   border: 1px solid rgba(27, 31, 35, 0.15);
   border-radius: 6px;
   color: #24292E;
@@ -122,6 +187,8 @@ body {
   font-weight: 500;
   padding: 6px 2px;
   transition: .2s;
+  width: 200px;
+  height: 35px;
 }
 
 .sidenav #upload input[type="file"] {
@@ -129,7 +196,7 @@ body {
 }
 
 .sidenav #upload button, #reset, .customUploadButton, .sidenav li {
-  background: #FAFBFC;
+  background: var(--sidenav-button);
   border: 1px solid rgba(27, 31, 35, 0.15);
   border-radius: 6px;
   color: #24292E;
@@ -138,10 +205,12 @@ body {
   padding: 6px 16px;
   transition: .2s;
   text-align: center;
+  width: 200px;
+  height: 35px;
 }
 
 .sidenav #upload button:hover, #reset:hover, .customUploadButton:hover, .sidenav li:hover {
-  background-color: #F3F4F6;
+  background-color: var(--sidenav-button-hover);
   text-decoration: none;
   transition-duration: 0.1s;
   cursor: pointer;
@@ -152,24 +221,25 @@ body {
 }
 
 .sidenav #upload button:active, #reset:active, .customUploadButton:active, .sidenav li:active {
-  background-color: #EDEFF2;
+  background-color: var(--sidenav-button-active);
   box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
   transition: none 0s;
 }
 
 .sidenav #modelinfo {
-  text-align: center;
+  text-align: left;
+  color: var(--sidenav-header);
 }
 
 .sidenav .navAR {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .model-container {
   position: relative;
-  background-color: whitesmoke;
+  background-color: var(--model-color);
   max-width: 100%;
   max-height: 100%;
 }
@@ -196,7 +266,7 @@ body {
   left: calc(50% - 150px);
   top: calc(50% - 100px);
   font-size: 3rem;
-  color: #104cba;
+  color: var(--model-load-text);
 }
 
 .model-container div canvas {
@@ -232,6 +302,17 @@ body {
     margin-right: 0;
   }
 
+  #theme-switch {
+    height: 35px;
+    width: 35px;
+    margin-right: 7.5px;
+  }
+  
+  #theme-switch ion-icon {
+    height: 20px;
+    width: 20px;
+  }
+
   .top-buttons {
     margin: 0 8px;
     background: none;
@@ -247,6 +328,7 @@ body {
 
   .sidenav {
     padding: 8px;
+    flex-wrap: nowrap;
   }
 
   .sidenav h2 {
@@ -254,6 +336,7 @@ body {
     margin-bottom: 8px;
     text-align: center;
     font-size: 1.2rem;
+    width: initial;
   }
 
   .sidenav .navHeaders {
@@ -273,12 +356,14 @@ body {
   .sidenav #upload input {
     font-size: 0.6rem;
     padding: 4px 2px;
+    width: initial;
   }
 
   .sidenav #upload button, #reset, .customUploadButton, .sidenav li {
     font-size: 0.7rem;
     padding: 4px 12px;
     list-style: none;
+    width: initial;
   }
 
   .sidenav #modelinfo {
@@ -300,7 +385,6 @@ body {
     left: calc(50% - 75px);
     top: calc(50%);
     font-size: 1.5rem;
-    color: #104cba;
   }
 
   
