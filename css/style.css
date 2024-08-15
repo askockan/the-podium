@@ -91,7 +91,7 @@ main {
   color: var(--header-text);
 }
 
-#theme-switch ion-icon:hover {
+#theme-switch:hover {
   cursor: pointer;
 }
 
