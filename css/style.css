@@ -19,8 +19,8 @@
   --sidenav-color: #353535;
   --sidenav-border: #050505;
   --sidenav-header: whitesmoke;
-  --sidenav-button: #999999;
-  --sidenav-button-hover: #acacac;
+  --sidenav-button: #acacac;
+  --sidenav-button-hover: #b3b3b3;
   --sidenav-button-active: #EDEFF2;
   --model-color: #151515;
   --model-load-text: whitesmoke;
@@ -186,7 +186,7 @@ main {
   background: var(--sidenav-button);
   border: 1px solid rgba(27, 31, 35, 0.15);
   border-radius: 6px;
-  color: #24292E;
+  color: var(--sidenav-button);
   font-size: 0.9rem;
   font-weight: 500;
   padding: 6px 2px;
@@ -254,7 +254,7 @@ main {
   left: 10px;
   width: 30px;
   height: 30px;
-  color: black;
+  color: var();
   z-index: 1;
 }
 
